@@ -48,24 +48,35 @@ public static void maxHeapify(int[] arr, int i){
         // if parent isn't the largest, then we need to swap it with the largest one, then check
         // if the old root, now child holds the max heap property, and if not, fix it!
         int parent = arr[i];
-        int left = arr[leftChildIndex(arr, i)]; int right = arr[rightChildIndex(arr, i)];
+        int leftIdx =leftChildIndex(arr, i); int rightIdx = rightChildIndex(arr, i);
+        int leftVal = leftIdx != -1 ? arr[leftIdx] : -1;
+        int rightVal = rightIdx != -1 ? arr[rightIdx] : -1;
 
-        int largest = Math.max(Math.max(left, right), parent);
+        int indexOfMaxVal =i;
 
-        if(i==largest) {;}               // yay!
+        if (leftVal >indexOfMaxVal) {
+                indexOfMaxVal=leftIdx;
+        }
+        if (rightVal > indexOfMaxVal) {
+                indexOfMaxVal=rightIdx;
+        }
+
+        if (indexOfMaxVal==i) {
+                ;
+        }
         else{
-                swap(arr, i, largest);
-                maxHeapify(arr, largest);
+                swap(arr, i, indexOfMaxVal);
+                maxHeapify(arr, indexOfMaxVal);
         }
 
 }
 
 public static int leftChildIndex(int[] arr, int i){
-        return (2*i < arr.length) ? 2*i : null;
+        return (2*i < arr.length) ? 2*i : -1;
 }
 
 public static int rightChildIndex(int[] arr, int i){
-        return (2*i +1 < arr.length) ? 2*i+1 : null;
+        return (2*i +1 < arr.length) ? 2*i+1 : -1;
 }
 
 
