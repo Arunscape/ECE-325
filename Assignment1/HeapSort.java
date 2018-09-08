@@ -12,51 +12,28 @@ public static void sort(int[] numbers) {
         // https://youtu.be/B7hVxCmfPtM?t=48m20s
 
         buildMaxHeap(numbers);
-
-        System.out.println("Building max heap...");
-        System.out.println("");
-
-        for (int n: numbers)
-                System.out.print(n + " ");
-        System.out.println();
         // largest value is now at root of the tree
 
         int endHeapIdx = numbers.length-1;
-
-        while(endHeapIdx<0) {
-                swap(numbers, 0, i);
-                maxHeapify(numbers,0,--heapSize);
+        while(endHeapIdx>0) {
+                swap(numbers, 0, endHeapIdx);
+                maxHeapify(numbers,0,endHeapIdx--);  // endHeapIdx is actually the heap's size before it is decremented
         }
 }
 
-// the key of a node is >= the keys of its children
 public static void buildMaxHeap(int[] arr){
-        // creates a max heap, so that we can get the largest element
-
+        // creates a max heap, so that we can get the largest element ( in max heaps, the key of a node is >= the keys of its children)
         // elements at indices n/2+1....n are all leaves, so no need to maxHeapify those!
-        // for (int i=(int)Math.floor(arr.length/2); i > 0; i--) {
-        //         maxHeapify(arr,i);
-        // }
         for (int i=arr.length/2; i >= 0; i--) {
-                maxHeapify(arr,i);
+                maxHeapify(arr,i, arr.length);
         }
 }
 
 public static void swap(int[] arr, int i, int j){
-        // System.out.println("Before swap");
-        // for (int n: arr)
-        //         System.out.print(n + " ");
-        // System.out.println();
-
-
-        System.out.println("Swapping "+ arr[i] +" and " +arr[j] );
+        // System.out.println("Swapping "+ arr[i] +" and " +arr[j] );
         arr[i] ^= arr[j];
         arr[j] ^= arr[i];
         arr[i] ^= arr[j];
-        // System.out.println("After swap");
-        for (int n: arr)
-                System.out.print(n + " ");
-        System.out.println();
 }
 
 public static void maxHeapify(int[] arr, int i, int heapSize){
@@ -67,35 +44,26 @@ public static void maxHeapify(int[] arr, int i, int heapSize){
         // which is largest, the parent, left or right child?
         // if parent isn't the largest, then we need to swap it with the largest one, then check
         // if the old root, now child holds the max heap property, and if not, fix it!
-
-        int leftIdx =leftChildIndex(arr, i); int rightIdx = rightChildIndex(arr, i);
-        // System.out.println("Left index: " +leftIdx + " Right index: "+rightIdx);
+        int leftIdx =leftChildIndex( i, heapSize); int rightIdx = rightChildIndex(i, heapSize);
         int leftVal = leftIdx != -1 ? arr[leftIdx] : -1;
         int rightVal = rightIdx != -1 ? arr[rightIdx] : -1;
-        // System.out.println("Left : " +leftVal + " Right: "+rightVal);
 
         // max val is the parent for now
         int indexOfMaxVal =i;
-        // System.out.println("This is i "+i);
 
         if (leftVal >arr[indexOfMaxVal]) {
                 indexOfMaxVal=leftIdx;
-                // System.out.println("index of max val: "+indexOfMaxVal);
-                // System.out.println("max val: "+arr[indexOfMaxVal]);
         }
         if (rightVal > arr[indexOfMaxVal]) {
                 indexOfMaxVal=rightIdx;
-                // System.out.println("index of max val: "+indexOfMaxVal);
-                // System.out.println("max val: "+arr[indexOfMaxVal]);
         }
         if (indexOfMaxVal==i) {
-                return;
+                return; // yay, fixed
         }
         else{
                 swap(arr, i, indexOfMaxVal);
-                maxHeapify(arr, indexOfMaxVal);
+                maxHeapify(arr, indexOfMaxVal, heapSize);
         }
-
 }
 
 public static int leftChildIndex(int i, int heapSize){
@@ -107,8 +75,6 @@ public static int rightChildIndex(int i, int heapSize){
         final int index = 2*i+2;
         return index < heapSize ? index : -1;
 }
-
-
 
 /**
  * Main entry: test the HeapSort
@@ -128,17 +94,6 @@ public static void main(String[] args) {
         for (int n: numbers)
                 System.out.print(n + " ");
         System.out.println();
-
-        // int[] n = {16, 4, 10, 14, 7, 9, 3, 2, 8, 1};
-        // for (int i: n)
-        //         System.out.print(i + " ");
-        // System.out.println();
-        // maxHeapify(n, 1);
-        // for (int i: n)
-        //         System.out.print(i + " ");
-        // System.out.println();
-
-
 }
 
 }
