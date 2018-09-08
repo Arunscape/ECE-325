@@ -1,4 +1,5 @@
 /**
+   Arun Woosaree
  * Lab 1: Java Basics, Heap Sort and Eclipse <br />
  * The {@code HeapSort} class
  */
@@ -70,7 +71,7 @@ public static int leftChildIndex(int i, int heapSize){
         final int index = 2*i+1;
         return index < heapSize ? index : -1;
 }
-
+// return value -1 indicates a nonexistent left/right child
 public static int rightChildIndex(int i, int heapSize){
         final int index = 2*i+2;
         return index < heapSize ? index : -1;
@@ -86,7 +87,6 @@ public static void main(String[] args) {
                 numbers[i] = (int) (Math.random() * 200);
                 System.out.print(numbers[i] + " ");
         }
-
         System.out.println();
 
         sort(numbers);
