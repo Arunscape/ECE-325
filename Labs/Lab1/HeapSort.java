@@ -3,6 +3,10 @@
  * Lab 1: Java Basics, Heap Sort and Eclipse <br />
  * The {@code HeapSort} class
  */
+
+import components.simplewriter.SimpleWriter;
+import components.simplewriter.SimpleWriter1L;
+
 public class HeapSort {
 
 /**
@@ -91,9 +95,16 @@ public static void main(String[] args) {
 
         sort(numbers);
 
+//         for (int n: numbers)
+//                 System.out.print(n + " ");
+//         System.out.println();
+
+        SimpleWriter out = new SimpleWriter1L();
         for (int n: numbers)
-                System.out.print(n + " ");
-        System.out.println();
+                out.print(n + " ");
+        out.println();
+        out.close();
+
 }
 
 }
