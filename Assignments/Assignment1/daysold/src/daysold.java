@@ -4,12 +4,15 @@
  */
 
 import java.util.GregorianCalendar;
+import java.util.concurrent.TimeUnit;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.text.DateFormat;
-import java.time.Instant;
-import static java.time.temporal.ChronoUnit.DAYS;
+//import java.text.DateFormat;
+//import java.time.Instant;
+//import static java.time.temporal.ChronoUnit.DAYS;
+import java.util.concurrent.TimeUnit;
+//import TimeUnit java.util.concurrent.TimeUnit.DAYS;
 
 public class daysold {
 
@@ -52,18 +55,20 @@ public class daysold {
     	String formattedbDay = outputFormat.format(bday.getTime());
     	String formattedToday = outputFormat.format(today.getTime());
     	
+
+    	
 //    	find age in milliseconds, then convert to days if the date is valid
 //    	there are  86400000 milliseconds in a day ( Math.round will take care of daylight savings's 1 hour difference 
 //     BECAUSE WE ARE NOT USING JAVA8 AND INSTANCES AREN'T IN THE JAVA7 STANDARD LIBRARY
-    	
     	long daysOld = Math.round((today.getTime().getTime() - bday.getTime().getTime()) / (double) 86400000);
+    	
     	if(daysOld<0) {
 		System.out.println(String.format("Birthday: %s; today: %s -- Wrong birthday!", formattedbDay, formattedToday));
 		return;
 		}
     	
-
-//	UGH WHY CAN'T WE USE JAVA 8 THIS WOULD BE SO MUCH BETTER
+//    	int daysOld = (int) TimeUnit.MILLISECONDS.toDays(today.getTimeInMillis()-bday.getTimeInMillis()); // this doesn't seem to work in some cases :/
+// 		UGH WHY CAN'T WE USE JAVA 8 THIS WOULD BE SO MUCH BETTER
 //    	░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 //    	░░░░░▄█▀▀░░░░▄▄▄▄░░░░▄░░░░░░░░░░░░░░░░░
 //    	▄░░░░▀░░░░▄█▀▀░░░░░░░█░░░░░░░░░░░░▄▄▄░▀
@@ -104,10 +109,10 @@ public class daysold {
         days("1920-02-29"); // leap day I think
         days("2018-12-01"); // future
         days("2018-09-13"); // today
+        days("2018-09-14"); // today
         days("2005-04-28"); 
 
         
     } 
 
 }
-
