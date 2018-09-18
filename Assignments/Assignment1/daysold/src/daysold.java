@@ -4,14 +4,13 @@
  */
 
 import java.util.GregorianCalendar;
-import java.util.concurrent.TimeUnit;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 //import java.text.DateFormat;
 //import java.time.Instant;
 //import static java.time.temporal.ChronoUnit.DAYS;
-import java.util.concurrent.TimeUnit;
+//import java.util.concurrent.TimeUnit;
 //import TimeUnit java.util.concurrent.TimeUnit.DAYS;
 
 public class daysold {
@@ -39,10 +38,6 @@ public class daysold {
 ;        	try { // Attempt to parse user input
         		Date date = formatter.parse(birthday);
         		bday.setTime(date) ;
-       		
-        		//delet this
-//        		Date bleh = formatter.parse("2000-06-15");
-//            	today.setTime(bleh);
         	}
  			catch (java.text.ParseException e) {
 //				e.printStackTrace();
@@ -58,17 +53,17 @@ public class daysold {
 
     	
 //    	find age in milliseconds, then convert to days if the date is valid
-//    	there are  86400000 milliseconds in a day ( Math.round will take care of daylight savings's 1 hour difference 
-//     BECAUSE WE ARE NOT USING JAVA8 AND INSTANCES AREN'T IN THE JAVA7 STANDARD LIBRARY
+//    	there are  86400000 milliseconds in a day ( Math.round will take care of daylight savings's 1 hour difference )
+//     Instances aren't in the standard library in java 7 :(
     	long daysOld = Math.round((today.getTime().getTime() - bday.getTime().getTime()) / (double) 86400000);
+//    	int daysOld = (int) TimeUnit.MILLISECONDS.toDays(today.getTimeInMillis()-bday.getTimeInMillis()); // off-by-one in some cases :/
     	
     	if(daysOld<0) {
 		System.out.println(String.format("Birthday: %s; today: %s -- Wrong birthday!", formattedbDay, formattedToday));
 		return;
 		}
     	
-//    	int daysOld = (int) TimeUnit.MILLISECONDS.toDays(today.getTimeInMillis()-bday.getTimeInMillis()); // this doesn't seem to work in some cases :/
-// 		UGH WHY CAN'T WE USE JAVA 8 THIS WOULD BE SO MUCH BETTER
+// 		THIS WOULD BE SO MUCH BETTER IN JAVA 8
 //    	░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
 //    	░░░░░▄█▀▀░░░░▄▄▄▄░░░░▄░░░░░░░░░░░░░░░░░
 //    	▄░░░░▀░░░░▄█▀▀░░░░░░░█░░░░░░░░░░░░▄▄▄░▀
@@ -109,10 +104,8 @@ public class daysold {
         days("1920-02-29"); // leap day I think
         days("2018-12-01"); // future
         days("2018-09-13"); // today
-        days("2018-09-14"); // today
+        days("2018-09-18"); // today
         days("2005-04-28"); 
-
-        
     } 
 
 }
