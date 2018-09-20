@@ -26,7 +26,7 @@ public static boolean verifyCookie(String cookie) {
         String domain = String.format("(%s)??", subdomain); //👍
         // HttpOnly
         // Secure
-        String path_val = "[\\^;\\x00-\\x7f]"; // anything except ; or crtl characters //👍
+        String path_val = "[^;\\x00-\\x7f]"; // anything except ; or crtl characters //👍
         String path = String.format("Path=%s", path_val); //👍
         String domain_av=String.format("Domain=%s", domain); //👍
         String nonzerodigit = "\\x31-\\x39"; //👍
@@ -40,12 +40,12 @@ public static boolean verifyCookie(String cookie) {
         String cookie_av=String.format("%s|%s|%s|%s|Secure|HttpOnly",expires,maxage,domain_av,path); //👍
         String cookie_octet = "\\x21|\\x23-\\x2b|\\x2d-\\x3a|\\x3c-\\x5b|\\x5d-\\x7e"; //👍
         String cookie_value = String.format("(%s)+?|\"(%s)+?\"",cookie_octet, cookie_octet); //👍 NOTE clarify what * means
-        String separators = "\\(\\)<>@,\\.,;:\\\\\"/\\[\\]\\?=\\{\\} \t";
-        String token = String.format("1[^\\x00-\\x7f%s]+?", separators);
+        String separators = "\\(\\)<>@,\\.,;:\\\\\"/\\[\\]\\?=\\{\\} \t"; //👍
+        String token = String.format("1[^\\x00-\\x7f%s]+?", separators); //👍
         // String cookie_name=token;
-        String cookie_pair=String.format("%s=%s",token,cookie_value);
-        String set_cookie = String.format("%s (; %s)+?", cookie_pair, cookie_av);
-        String set_cookie_header = String.format("Set-Cookie: %s",set_cookie); // NOTE clarify what * means
+        String cookie_pair=String.format("%s=%s",token,cookie_value); //👍
+        String set_cookie = String.format("%s (; %s)+?", cookie_pair, cookie_av); //👍
+        String set_cookie_header = String.format("Set-Cookie: %s",set_cookie); //👍 // NOTE clarify what * means
 
         Pattern p = Pattern.compile(set_cookie_header);
         Matcher m = p.matcher(cookie);
