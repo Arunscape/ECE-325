@@ -47,7 +47,7 @@ public static boolean verifyCookie(String cookie) {
         String set_cookie = String.format("%s (; %s)??", cookie_pair, cookie_av); //👍 // NOTE clarify what * means
         String set_cookie_header = String.format("Set-Cookie: %s",set_cookie); //👍
 
-        // System.out.println(set_cookie_header );
+        System.out.println(set_cookie_header);
         Pattern p = Pattern.compile(set_cookie_header);
         Matcher m = p.matcher(cookie);
         while (m.find()) {
@@ -84,6 +84,9 @@ public static void main(String[] args) {
         };
         for (int i = 0; i < cookies.length; i++)
                 System.out.println(String.format("Cookie %2d: %s", i+1, verifyCookie(cookies[i]) ? "Legal" : "Illegal"));
+
+        for (String n: cookies) System.out.println(n);
+
 }
 
 }
