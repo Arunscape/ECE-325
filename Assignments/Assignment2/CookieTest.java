@@ -2,6 +2,8 @@
  * Assignment 2: Java regular expressions <br />
  * Test cookies using regular expressions
  */
+import java.util.regex.*;
+
 public class CookieTest {
 
 /**
@@ -13,13 +15,13 @@ public static boolean verifyCookie(String cookie) {
         boolean legal = false;
 
         // String digit = "[0-9]";
-        String digit = "\\d";
-        String letter = "[A-Za-z]";
+        String digit = "\\d"; //👍
+        String letter = "[A-Za-z]"; //👍
         String ld = String.format("%s|%s", digit, letter);
         String ldh = String.format("%s|-", ld); // letter digit or hyphen
         String ldh_str = String.format("%s+", ldh);
         String label = String.format("%s[[%s]%s]", letter, ldh_str, ld);
-        String subdomain = String.format("%s|[%s.]+%s", label);
+        String subdomain = String.format("%s|(%s.)+%s", label,label,label);
         String domain = String.format("%s??", subdomain);
         // HttpOnly
         // Secure
@@ -30,20 +32,26 @@ public static boolean verifyCookie(String cookie) {
         String maxage = String.format("Max-Age=%s%s*+", nonzerodigit, digit);
         String month = "Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec";
         String weekday = "Mon|Tue|Wed|Thu|Fri|Sat|Sun";
-        String time = String.format("%s{2}:%s{2}:%s{2}",digit);
+        String time = String.format("%s{2}:%s{2}:%s{2}",digit,digit,digit);
         String date = String.format("%s{2} %s %s{4}", digit, month, digit);
         String rfc1123date = String.format("%s, %s %s GMT", weekday, date, time);
         String expires = String.format("Expires=%s", rfc1123date);
         String cookie_av=String.format("%s/%s/%s/%s/Secure/HttpOnly",expires,maxage,domain_av,path);
         String cookie_octet = "\\x21/\\x23-\\x2b/\\x2d-\\x3a/\\x3c-\\x5b/\\x5d-7e";
-        String cookie_value = String.format("(%s)+?/\\(\\"(%s)+?\\"\\)",cookie_octet);
-        String separators = "()<>@,;:\\\/[]\\?={} \\t";
+        String cookie_value = String.format("(%s)+?/\"(%s)+?\"",cookie_octet, cookie_octet);
+        // String cookie_value = String.format("(%s)+?/\\(\\"(%s)+?\\"\\)", cookie_octet);
+        String separators = "()<>@,;:\\/[]\\?={} \\t";
         String token = String.format("1[^\\x00-\\x7f%s]+?", separators);
         // String cookie_name=token;
         String cookie_pair=String.format("%s=%s",token,cookie_value);
         String set_cookie = String.format("%s (; %s)+?", cookie_pair, cookie_av);
-        // String set_cookie_header = String.format("Set-Cookie: %s",set_cookie);
+        String set_cookie_header = String.format("Set-Cookie: %s",set_cookie);
 
+        Pattern p = Pattern.compile(set_cookie_header);
+        Matcher m = p.matcher(cookie);
+        while (m.find()) {
+                System.out.print(cookie.substring(m.start(), m.end())+ "*");
+        }
         return legal;
 }
 
