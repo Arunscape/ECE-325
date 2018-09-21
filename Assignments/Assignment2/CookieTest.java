@@ -40,17 +40,17 @@ public static boolean verifyCookie(String cookie) {
         String rfc1123date = String.format("%s, %s %s GMT", weekday, date, time);
         String expires = String.format("Expires=%s", rfc1123date);
         String cookie_av=String.format("%s|%s|%s|%s|Secure|HttpOnly",expires,maxage,domain_av,path);
-        String cookie_octet = "\\x21|\\x23-\\x2b|\\x2d-\\x3a|\\x3c-\\x5b|\\x5d-\\x7e";
-        String cookie_value = String.format("(%s)??|\"(%s)??\"",cookie_octet, cookie_octet);  //NOTE clarify what * means
-        String separators = "\\(\\)<>@,\\.,;:\\\\\"/\\[\\]\\?=\\{\\} \t";
-        String token = String.format("[^\\x00-\\x7f%s]+?", separators);
+        String cookie_octet = "[\\x21\\x23-\\x2b\\x2d-\\x3a\\x3c-\\x5b\\x5d-\\x7e]";
+        String cookie_value = String.format("%s*|\"%s*\"",cookie_octet, cookie_octet);  //NOTE clarify what * means
+        String separators = "\\(\\)<>@,\\.,;:\\\\\"/\\[\\]\\?=\\{\\} \t"; //space here is on purpose
+        String token = String.format("[^%s]?", separators);
         // String cookie_name=token;
         String cookie_pair=String.format("%s=%s",token,cookie_value);
         String set_cookie = String.format("%s (; %s)??", cookie_pair, cookie_av);  // NOTE clarify what * means
         String set_cookie_header = String.format("Set-Cookie: %s",set_cookie);
 
         // System.out.println(set_cookie_header);
-        System.out.println(expires);
+        System.out.println(separators);
         Pattern p = Pattern.compile(domain);
         Matcher m = p.matcher(cookie);
         while (m.find()) {
