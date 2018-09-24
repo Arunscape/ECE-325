@@ -19,12 +19,13 @@ public static boolean verifyCookie(String cookie) {
         String letter = "[A-Za-z]";
         // String ld = String.format("%s|%s", digit, letter);
         // String ldh = String.format("%s|\\-", ld); // letter digit or hyphen
-        String ldh = "[A-Za-z\\d\\-]"
-                     // String ldh_str = String.format("(%s)+", ldh);
-                     String ldh_str = "[A-Za-z\\d\\-]+"
-                                      // String label = String.format("%s((%s)?%s)?", letter, ldh_str, ld);
-                                      String label = "[A-Za-z]([A-Za-z\\d-]*[A-Za-z\\d])?";
-        String subdomain = String.format("(%s.%s)+|%s", label,label,label);
+        String ldh = "[A-Za-z\\d\\-]";
+        // String ldh_str = String.format("(%s)+", ldh);
+
+        String ldh_str = "[A-Za-z\\d\\-]+";
+        // String label = String.format("%s((%s)?%s)?", letter, ldh_str, ld);
+        String label = "[A-Za-z]([A-Za-z\\d-]*[A-Za-z\\d])?";
+        String subdomain = String.format("(%s.%s)+?|%s", label,label,label);
         String domain = String.format("%s|(.%s)*", subdomain, subdomain);
         String domain_av=String.format("Domain=(%s)", domain);
         // HttpOnly
@@ -41,17 +42,17 @@ public static boolean verifyCookie(String cookie) {
         String date = String.format("(%s){2} %s (%s){4}", digit, month, digit);
         String rfc1123date = String.format("%s, %s %s GMT", weekday, date, time);
         String expires = String.format("Expires=(%s){1}", rfc1123date);
-        String cookie_av=String.format("%s|%s|%s|%s|Secure|HttpOnly",expires,maxage,domain_av,path);
+        String cookie_av=String.format("(%s|%s|%s|%s|Secure|HttpOnly)",expires,maxage,domain_av,path);
         String cookie_octet = "[\\x21\\x23-\\x2b\\x2d-\\x3a\\x3c-\\x5b\\x5d-\\x7e]";
         String cookie_value = String.format("\"%s*?\"|%s*",cookie_octet, cookie_octet);  //NOTE clarify what * means
         String separators = "\\(\\)<>@,\\.,;:\\\\\"/\\[\\]\\?=\\{\\} \t"; //space here is on purpose
         String token = String.format("[^%s]+", separators);
         // String cookie_name=token;
-        String cookie_pair=String.format("%s=(%s)",token,cookie_value);
-        String set_cookie = String.format("%s(; %s)+|%s", cookie_pair, cookie_av,cookie_pair);  // NOTE clarify what * means
+        String cookie_pair=String.format("%s=(%s)(; )?",token,cookie_value);
+        String set_cookie = String.format("%s(; %s)+?|%s", cookie_pair, cookie_av,cookie_pair);  // NOTE clarify what * means
         String set_cookie_header = String.format("Set-Cookie: %s",set_cookie);
 
-        System.out.println(subdomain);
+        System.out.println(set_cookie_header);
         // System.out.println(separators);
         // Pattern p = Pattern.compile(expires);
         // Matcher m = p.matcher(cookie);
