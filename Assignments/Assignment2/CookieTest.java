@@ -17,12 +17,14 @@ public static boolean verifyCookie(String cookie) {
         // String digit = "[0-9]";
         String digit = "[\\d]";
         String letter = "[A-Za-z]";
-        String ld = String.format("%s|%s", digit, letter);
-        String ldh = String.format("%s|\\-", ld); // letter digit or hyphen
-        String ldh_str = String.format("(%s)+", ldh);
-        // String label = String.format("%s((%s)?%s)?", letter, ldh_str, ld);
-        String label = "[A-Za-z]([A-Za-z\\d-]*[A-Za-z\\d])?";
-        String subdomain = String.format("%s|(%s.%s)+", label,label,label);
+        // String ld = String.format("%s|%s", digit, letter);
+        // String ldh = String.format("%s|\\-", ld); // letter digit or hyphen
+        String ldh = "[A-Za-z\\d\\-]"
+                     // String ldh_str = String.format("(%s)+", ldh);
+                     String ldh_str = "[A-Za-z\\d\\-]+"
+                                      // String label = String.format("%s((%s)?%s)?", letter, ldh_str, ld);
+                                      String label = "[A-Za-z]([A-Za-z\\d-]*[A-Za-z\\d])?";
+        String subdomain = String.format("(%s.%s)+|%s", label,label,label);
         String domain = String.format("%s|(.%s)*", subdomain, subdomain);
         String domain_av=String.format("Domain=(%s)", domain);
         // HttpOnly
@@ -38,7 +40,7 @@ public static boolean verifyCookie(String cookie) {
         String time = String.format("(%s){2}:(%s){2}:(%s){2}",digit,digit,digit);
         String date = String.format("(%s){2} %s (%s){4}", digit, month, digit);
         String rfc1123date = String.format("%s, %s %s GMT", weekday, date, time);
-        String expires = String.format("Expires=%s", rfc1123date);
+        String expires = String.format("Expires=(%s){1}", rfc1123date);
         String cookie_av=String.format("%s|%s|%s|%s|Secure|HttpOnly",expires,maxage,domain_av,path);
         String cookie_octet = "[\\x21\\x23-\\x2b\\x2d-\\x3a\\x3c-\\x5b\\x5d-\\x7e]";
         String cookie_value = String.format("\"%s*?\"|%s*",cookie_octet, cookie_octet);  //NOTE clarify what * means
@@ -49,13 +51,13 @@ public static boolean verifyCookie(String cookie) {
         String set_cookie = String.format("%s(; %s)+|%s", cookie_pair, cookie_av,cookie_pair);  // NOTE clarify what * means
         String set_cookie_header = String.format("Set-Cookie: %s",set_cookie);
 
-        System.out.println(set_cookie);
+        System.out.println(subdomain);
         // System.out.println(separators);
-        Pattern p = Pattern.compile(expires);
-        Matcher m = p.matcher(cookie);
-        while (m.find()) {
-                System.out.print(cookie.substring(m.start(), m.end())+"~");
-        }
+        // Pattern p = Pattern.compile(expires);
+        // Matcher m = p.matcher(cookie);
+        // while (m.find()) {
+        //         System.out.print(cookie.substring(m.start(), m.end())+"~");
+        // }
         return legal;
 }
 
@@ -85,9 +87,9 @@ public static void main(String[] args) {
                 "Set-Cookie: ns1=alss/0.foobar^; Path=",                // 16 illegal Path: empty
                 "Set-Cookie: ns1=alss/0.foobar^; httponly",             // 17 lower case
         };
-        for (int i = 0; i < cookies.length; i++)
-                System.out.println(String.format("Cookie %2d: %s", i+1, verifyCookie(cookies[i]) ? "Legal" : "Illegal"));
-
+        // for (int i = 0; i < cookies.length; i++)
+        //         System.out.println(String.format("Cookie %2d: %s", i+1, verifyCookie(cookies[i]) ? "Legal" : "Illegal"));
+        verifyCookie(cookies[0]);
         // for (String n: cookies) System.out.println(n);
 
 }
