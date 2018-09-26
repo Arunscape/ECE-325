@@ -12,7 +12,6 @@ public class CookieTest {
  * @return              {@code boolean} True for a legal cookie; false for an illegal one
  */
 public static boolean verifyCookie(String cookie) {
-        boolean legal = false;
 
         // String digit = "[0-9]";
         String digit = "[\\d]";
@@ -21,7 +20,6 @@ public static boolean verifyCookie(String cookie) {
         // String ldh = String.format("%s|\\-", ld); // letter digit or hyphen
         String ldh = "[A-Za-z\\d\\-]";
         // String ldh_str = String.format("(%s)+", ldh);
-
         String ldh_str = "[A-Za-z\\d\\-]+";
         // String label = String.format("%s((%s)?%s)?", letter, ldh_str, ld);
         String label = "[A-Za-z]([A-Za-z\\d\\-]*[A-Za-z\\d])?";
@@ -52,14 +50,13 @@ public static boolean verifyCookie(String cookie) {
         String set_cookie = String.format("%s(; %s)*", cookie_pair, cookie_av);  // NOTE clarify what * means
         String set_cookie_header = String.format("^Set-Cookie: %s$",set_cookie);
 
-        System.out.println(set_cookie_header);
-        // System.out.println(separators);
-        // Pattern p = Pattern.compile(expires);
-        // Matcher m = p.matcher(cookie);
+        // System.out.println(set_cookie_header);
+        Pattern p = Pattern.compile(set_cookie_header);
+        Matcher m = p.matcher(cookie);
         // while (m.find()) {
         //         System.out.print(cookie.substring(m.start(), m.end())+"~");
         // }
-        return legal;
+        return m.matches();
 }
 
 /**
@@ -86,13 +83,11 @@ public static void main(String[] args) {
                 "Set-Cookie: ns1=alss/0.foobar^; Domain=.0com",         // 14 illegal Domain: starting 0
                 "Set-Cookie: ns1=alss/0.foobar^; Domain=.com-",         // 15 illegal Domain: trailing non-letter-digit
                 "Set-Cookie: ns1=alss/0.foobar^; Path=",                // 16 illegal Path: empty
-                "Set-Cookie: ns1=alss/0.foobar^; httponly",             // 17 lower case
+                "Set-Cookie: ns1=alss/0.foobar^; httponly",            // 17 lower case
         };
-        // for (int i = 0; i < cookies.length; i++)
-        //         System.out.println(String.format("Cookie %2d: %s", i+1, verifyCookie(cookies[i]) ? "Legal" : "Illegal"));
-        verifyCookie(cookies[0]);
         // for (String n: cookies) System.out.println(n);
 
+        for (int i = 0; i < cookies.length; i++)
+                System.out.println(String.format("Cookie %2d: %s", i+1, verifyCookie(cookies[i]) ? "Legal" : "Illegal"));
 }
-
 }
