@@ -50,9 +50,9 @@ public static boolean verifyCookie(String cookie) {
         // String cookie_name=token;
         String cookie_pair=String.format("%s=(%s)",token,cookie_value);
         String set_cookie = String.format("%s(; %s)*", cookie_pair, cookie_av);  // NOTE clarify what * means
-        String set_cookie_header = String.format("^Set-Cookie: %s",set_cookie);
+        String set_cookie_header = String.format("^Set-Cookie: %s$",set_cookie);
 
-        System.out.println(set_cookie);
+        System.out.println(set_cookie_header);
         // System.out.println(separators);
         // Pattern p = Pattern.compile(expires);
         // Matcher m = p.matcher(cookie);
