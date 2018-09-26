@@ -24,9 +24,9 @@ public static boolean verifyCookie(String cookie) {
 
         String ldh_str = "[A-Za-z\\d\\-]+";
         // String label = String.format("%s((%s)?%s)?", letter, ldh_str, ld);
-        String label = "[A-Za-z]([A-Za-z\\d-]*[A-Za-z\\d])?";
-        String subdomain = String.format("(%s.%s)+?|%s", label,label,label);
-        String domain = String.format("%s|(.%s)*", subdomain, subdomain);
+        String label = "[A-Za-z]([A-Za-z\\d\\-]*[A-Za-z\\d])?";
+        String subdomain = String.format("(%s(\\.%s)*)", label,label);
+        String domain = String.format("(\\.?%s)", subdomain, subdomain);
         String domain_av=String.format("Domain=(%s)", domain);
         // HttpOnly
         // Secure
@@ -52,7 +52,7 @@ public static boolean verifyCookie(String cookie) {
         String set_cookie = String.format("%s(; %s)+?|%s", cookie_pair, cookie_av,cookie_pair);  // NOTE clarify what * means
         String set_cookie_header = String.format("Set-Cookie: %s",set_cookie);
 
-        System.out.println(set_cookie_header);
+        System.out.println(domain);
         // System.out.println(separators);
         // Pattern p = Pattern.compile(expires);
         // Matcher m = p.matcher(cookie);
