@@ -32,6 +32,10 @@ public class ResearchGroups {
 		}
 		
 	}
+	
+	public static void sortGroups(String[][] groups){
+		HeapSort.sort(groups);
+	}
 
     public static void main(String[] args) {
         String[][] groups = { {"Bob", "Carol", "Eric", "Matt"},             // 0
@@ -47,13 +51,18 @@ public class ResearchGroups {
         // TODO: Run your searching and sorting methods here.
         
         searchMember("Bob", groups);
+        searchMember("Susan", groups);
+        searchMember("Carol", groups);
+        searchMember("reeee", groups);
+        sortGroups(groups);
+        
 
-//        for (int i=0;i<groups.length;i++) {
-//            System.out.print("group " + i + ": ");
-//            for (int j = 0; j < groups[i].length; j++)
-//                System.out.print(groups[i][j] + " ");
-//            System.out.println();
-//        }
+        for (int i=0;i<groups.length;i++) {
+            System.out.print("group " + i + ": ");
+            for (int j = 0; j < groups[i].length; j++)
+                System.out.print(groups[i][j] + " ");
+            System.out.println();
+        }
     }
 
 }
