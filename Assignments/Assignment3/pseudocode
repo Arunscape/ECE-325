@@ -1,0 +1,24 @@
+function findoperation(string n){
+regex1: brackets with anything inside ([^\)]*)
+regex2: let [a-z]+ = [a-z]|[0-9]
+regex3: exponents: [.]^[.]
+regex4: multiplication or division: [.](*|/)[.]
+regex5: addition or subtraction: [.](+|-)[.]
+
+if regex1.find(){
+calculateshit(in, regex1.startidx, regex1.endidx)
+}
+elseif regex2.find()
+
+elseifregex3.find()
+....
+
+}
+
+
+function int calculateshit(string op, int a, int b){
+...
+findoperation(in.substring(0,a)
++sol.toString()
++in.substring(b,in.length-1))
+}
