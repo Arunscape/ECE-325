@@ -10,24 +10,38 @@ public class Calculator {
  * @param exp           {@code String} The expression string
  * @return              {@code int}    The value of the expression
  */
-
+private Pattern findBrackets = Pattern.compile("\\([^\\(\\)]*\\)");
+private Pattern findExponents = Pattern.compile("[0-9]+ \\^ [0-9]+");
+private Pattern findMulDiv = Pattern.compile("[0-9]+ (\\*|/) [0-9]+");
+private Pattern findAddSub = Pattern.compile("[0-9]+ (\\+|-) [0-9]+");
+private Pattern findAssignments = Pattern.compile("let [a-z] = ([a-z]|[0-9]+)");
 private void findOperation(String input){
-        Pattern findBrackets = Pattern.compile("\\([^\\)]*\\)");
-        Pattern findAssignments = Pattern.compile("let [a-z] = [0-9]");
-        Pattern findExponents = Pattern.compile("[.]^[.]");
-        Pattern findMulDiv = Pattern.compile("[.] (^|/) [.]");
-        Pattern findAddSub = Pattern.compile("[.] (\\+|-) [.]");
 
-        Matcher
+        if (findBrackets.matcher(input).matches()) {
+                ;
+        }
+        else if (findExponents.matcher(input).matches()) {
+                ;
+        }
+        else if (findMulDiv.matcher(input).matches()) {
+                ;
+        }
+        else if (findAddSub.matcher(input).matches()) {
+                ;
+        }
+        else if (findAssignments.matcher(input).matches()) {
+                ;
+        }
+}
 
-
-
+private int calculate(String op, int a, int b){
+        // findOperation();
+        return 0;
 }
 
 public int execExpression(String exp) {
         int returnValue = -1;
         // TODO: Assignment 3 Part 1 -- parse, calculate the expression, and return the correct value
-
 
         // TODO: Assignment 3 Part 2-1 -- when come to illegal expressions, raise proper exceptions
 
