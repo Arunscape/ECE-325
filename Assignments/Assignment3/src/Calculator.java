@@ -135,6 +135,7 @@ private void calculate(String input, int a, int b, HashMap<Character,Integer> va
 		case "/": sol = left/right; break;
 		case "+": sol = left+right; break;
 		case "-": sol = left-right; break;
+		case "^": sol = (int) Math.pow(left, right); break;
 		}
 	
 	}
@@ -158,7 +159,6 @@ private void calculate(String input, int a, int b, HashMap<Character,Integer> va
 }
 
 public int execExpression(String exp) {
-        int returnValue = -1;
         // TODO: Assignment 3 Part 1 -- parse, calculate the expression, and return the correct value
 
         // TODO: Assignment 3 Part 2-1 -- when come to illegal expressions, raise proper exceptions
@@ -188,9 +188,9 @@ public static void main(String[] args) {
         };
 //        for (int i = 0; i < inputs.length; i++)
 //                System.out.println(String.format("%d -- %-90s %d", i+1, inputs[i], calc.execExpression(inputs[i])));
-//        for (int i = 0; i < inputs.length; i++)
-//        	calc.execExpression(inputs[i]);
-        System.out.println(calc.execExpression(inputs[8]));
+        for (int i = 0; i < inputs.length; i++)
+        	System.out.println(calc.execExpression(inputs[i]));
+//        System.out.println(calc.execExpression(inputs[8]));
 
         // Part 2
         inputs = new String[] {
