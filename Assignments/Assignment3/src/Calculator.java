@@ -3,6 +3,7 @@
  * Calculator using BNF
  */
 import java.util.HashMap;
+import java.util.Stack;
 import java.util.regex.*;
 
 @SuppressWarnings("serial")
@@ -177,6 +178,53 @@ private void calculate(String input, int a, int b, HashMap<Character,Integer> va
 }
 
 private void checkSyntax(String input) throws SyntaxError {
+	
+	
+	
+	// Check balanced brackets
+//	  s = Stack()
+//			    balanced = True
+//			    index = 0
+//			    while index < len(symbolString) and balanced:
+//			        symbol = symbolString[index]
+//			        if symbol == "(":
+//			            s.push(symbol)
+//			        else:
+//			            if s.isEmpty():
+//			                balanced = False
+//			            else:
+//			                s.pop()
+//
+//			        index = index + 1
+//
+//			    if balanced and s.isEmpty():
+//			        return True
+//			    else:
+//			        return False
+	String onlyBrackets = input.replaceAll("[^()]", "");
+	  Stack<Character> s= new Stack<Character>();
+	  Boolean balanced = true;
+	  int idx =0;
+	 while (idx < onlyBrackets.length() && balanced) {
+		 if(onlyBrackets.charAt(idx) == '(') { s.push('(') }
+		 else if (s.empty()) { 
+			 balanced=false;
+			 break;			 
+		 }
+		 else s.pop()
+		 idx++;
+	 }
+		  
+	  
+	  
+	  
+	
+	
+	// let without =
+	
+	// missing operator
+	
+	// let without )
 	Boolean valid = false;
 	if (!valid) {
 		throw new SyntaxError("REEEEEE");
