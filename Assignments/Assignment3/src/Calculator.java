@@ -72,11 +72,20 @@ private void calculate(String input, int a, int b, HashMap<Character,Integer> va
 //		System.out.println(m.group());
 //		System.out.println(m.group().charAt(4));
 //		System.out.println(m.group().substring(8));
-		sol= Integer.parseInt(m.group().substring(8));
+		
+		try {
+			sol = Integer.parseInt(m.group().substring(8));
+		}
+		catch(NumberFormatException e) {
+			// it's not a number, it's a variable
+			sol = vars.get(m.group().substring(8).charAt(0));
+		}
 		vars.put(m.group().charAt(4), sol);
 		
 	}
 	else {
+		exp = exp.replace("(","");
+		exp = exp.replace(")","");
 		String[] stuff = exp.split(" ");
 		// 0 - left operand
 		// 1- operator
@@ -152,11 +161,11 @@ public static void main(String[] args) {
                 "(let x = 2) ^ (let y = 3);",                                                       // 8, returns 8
                 "(let y = 3) ^ (let x = 2);"                                                        // 9, returns 9
         };
-//        for (int i = 0; i < inputs.length; i++)
-//                System.out.println(String.format("%d -- %-90s %d", i+1, inputs[i], calc.execExpression(inputs[i])));
+        for (int i = 0; i < inputs.length; i++)
+                System.out.println(String.format("%d -- %-90s %d", i+1, inputs[i], calc.execExpression(inputs[i])));
 //        for (int i = 0; i < inputs.length; i++)
 //        	calc.execExpression(inputs[i]);
-        System.out.println(calc.execExpression(inputs[4]));
+
 
         // Part 2
         inputs = new String[] {
