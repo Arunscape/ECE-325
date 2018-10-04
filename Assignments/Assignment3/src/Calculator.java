@@ -198,9 +198,18 @@ private void checkSyntax(String input) throws SyntaxError {
 		}
 	}
 	// let without =
-	
+	Pattern p = Pattern.compile("let [a-z] [a-z0-9]");
+	Matcher m = p.matcher(input);
+	if(m.find()) {
+		throw new SyntaxError("= expected");
+	}
 	// missing operator
-	
+	p = Pattern.compile("[a-z0-9] [a-z0-9]");
+    m = p.matcher(input.replaceAll("let [a-z] = ([a-z]+|[0-9]+|\\(", ""));
+    System.out.println(input.replaceAll("let [a-z] = ([a-z]+|[0-9]+)", ""));
+	if(m.find() || input.contains(") (")) {
+		throw new SyntaxError("operator expected");
+	}
 	// let without )
 }
 
@@ -212,13 +221,6 @@ public String execExpression(String exp) throws SyntaxError, RuntimeError{
         	checkSyntax(exp);
         	return Integer.toString(findOperation(exp,null));
 
-//        catch(RuntimeError e) {
-//        	System.out.print(e);
-//        	return "";
-//        }
-        
-        
-//        return returnValue;
 }
 
 /**
@@ -269,7 +271,7 @@ public static void main(String[] args) {
         try {
 //          for (int i = 0; i < inputs.length; i++)
 //          System.out.println(String.format("%d -- %-30s %d", i+1, inputs[i], calc.execExpression(inputs[i])));
-        	System.out.println(calc.execExpression(inputs[0]));
+        	System.out.println(calc.execExpression(inputs[2]));
         }
         catch(SyntaxError e) {
         	System.out.print(e);
