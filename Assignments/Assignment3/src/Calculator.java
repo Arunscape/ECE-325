@@ -38,7 +38,7 @@ private Pattern findAddSub = Pattern.compile("([0-9]+|[a-z]) (\\+|-) ([0-9]+|[a-
 private Pattern findAssignments = Pattern.compile("let [a-z] = [^;)]*");
 private int answer;
 
-private int findOperation(String input, HashMap<Character,Integer> vars) throws RuntimeError{
+private int findOperation(String in, HashMap<Character,Integer> vars) throws RuntimeError, SyntaxError{
 		Matcher m = null;
 		
 		HashMap<Character,Integer> dict;
@@ -48,7 +48,7 @@ private int findOperation(String input, HashMap<Character,Integer> vars) throws 
 		else {
 			dict=vars;
 		}
-		
+		String input = in.replace(";","");
 		
         if         (findBrackets.matcher(input).find())        { m=findBrackets.matcher(input);        }
         else if (findExponents.matcher(input).find())     { m=findExponents.matcher(input);     }
@@ -58,16 +58,19 @@ private int findOperation(String input, HashMap<Character,Integer> vars) throws 
         else {
 //        	return input.length() == 1 ? Integer.parseInt(input) : answer;
         	
-        	if (input.length() == 1) {
+        	
         		try {
+        			Pattern p = Pattern.compile("[a-z0-9] [a-z0-9]");
+        			Matcher moo = p.matcher(input);
+        				
+        			if(moo.find()) {throw new SyntaxError("operand expected");}
         			return Integer.parseInt(input);
         		}
         		catch(NumberFormatException e) {
         			//get the value of a variable
         			return vars.get(input.charAt(0));
         		}
-        	}
-        	else return answer;
+//        		System.out.println("throw error here?");
         }
         // R E C U R S I O N
 //        System.out.println(input);
@@ -97,7 +100,7 @@ private int findOperation(String input, HashMap<Character,Integer> vars) throws 
 //	return -1;
 //}
 
-private void calculate(String input, int a, int b, HashMap<Character,Integer> vars) throws RuntimeError {
+private void calculate(String input, int a, int b, HashMap<Character,Integer> vars) throws RuntimeError, SyntaxError {
 	int sol=-1;
 	
 	String exp = input.substring(a,b);
@@ -149,7 +152,13 @@ private void calculate(String input, int a, int b, HashMap<Character,Integer> va
 			right = Integer.parseInt(stuff[2]);
 		}
 		catch(NumberFormatException e) {
-			right = vars.get(stuff[2].charAt(0));
+			try {
+				right = vars.get(stuff[2].charAt(0));
+			}
+			catch(NullPointerException er){
+				throw new RuntimeError(String.format("%s is undefined", stuff[2]));
+			}
+			
 		}
 		
 		switch(stuff[1]) {
@@ -171,6 +180,7 @@ private void calculate(String input, int a, int b, HashMap<Character,Integer> va
 //			input.substring(0, a)+
 //			Integer.toString(sol)+
 //			input.substring(b));
+
 	findOperation(
 			input.substring(0, a)+
 			Integer.toString(sol)+
@@ -204,13 +214,19 @@ private void checkSyntax(String input) throws SyntaxError {
 		throw new SyntaxError("= expected");
 	}
 	// missing operator
-	p = Pattern.compile("[a-z0-9] [a-z0-9]");
-    m = p.matcher(input.replaceAll("let [a-z] = ([a-z]+|[0-9]+|\\(", ""));
-    System.out.println(input.replaceAll("let [a-z] = ([a-z]+|[0-9]+)", ""));
-	if(m.find() || input.contains(") (")) {
-		throw new SyntaxError("operator expected");
+	p = Pattern.compile(" let [a-z]");
+    m = p.matcher(input);
+	if(m.find()) {
+		throw new SyntaxError(") expected");
 	}
-	// let without )
+	
+	// ler undefined
+//	String cp = input;
+//	cp = cp.replaceAll("let [a-z] = [a-z0-9]", "");
+//	cp = cp.replaceAll("[();^]", "");
+//	cp = cp.replaceAll(" [a-z] = [a-z0-9]", "");
+//	System.out.println(cp);
+	
 }
 
 public String execExpression(String exp) throws SyntaxError, RuntimeError{
@@ -244,10 +260,11 @@ public static void main(String[] args) {
         };
 //        for (int i = 0; i < inputs.length; i++)
 //                System.out.println(String.format("%d -- %-90s %d", i+1, inputs[i], calc.execExpression(inputs[i])));
+
         try {
             for (int i = 0; i < inputs.length; i++)
             	System.out.println(calc.execExpression(inputs[i]));
-//            System.out.println(calc.execExpression(inputs[1]));
+//            System.out.println(calc.execExpression(inputs[6]));
         }
      // no errors with these strings
         catch(SyntaxError e) {
@@ -268,17 +285,22 @@ public static void main(String[] args) {
                 "(let x = 5) + y;"              // 6, runtime error: 'y' undefined
         };
         // TODO: Assignment 3 Part 2-2 -- catch and deal with your exceptions here
-        try {
-//          for (int i = 0; i < inputs.length; i++)
-//          System.out.println(String.format("%d -- %-30s %d", i+1, inputs[i], calc.execExpression(inputs[i])));
-        	System.out.println(calc.execExpression(inputs[2]));
-        }
-        catch(SyntaxError e) {
-        	System.out.print(e);
-        }
-        catch(RuntimeError e) {
-        	System.out.println(e);
-        }
+  
+          for (int i = 0; i < inputs.length; i++)
+              try {
+//                  System.out.println(String.format("%d -- %-30s %d", i+1, inputs[i], calc.execExpression(inputs[i])));
+              	System.out.println(calc.execExpression(inputs[4]));
+              }
+          catch(SyntaxError e) {
+          	System.out.println(e);
+          }
+          catch(RuntimeError e) {
+          	System.out.println(e);
+          }
+
+        
+
+        
 //      System.out.println(calc.execExpression(inputs[1]));
 }
 
