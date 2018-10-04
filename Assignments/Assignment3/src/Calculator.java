@@ -16,6 +16,7 @@ private Pattern findExponents = Pattern.compile("([0-9]+|[a-z]) \\^ ([0-9]+|[a-z
 private Pattern findMulDiv = Pattern.compile("([0-9]+|[a-z]) (\\*|/) ([0-9]+|[a-z])");
 private Pattern findAddSub = Pattern.compile("([0-9]+|[a-z]) (\\+|-) ([0-9]+|[a-z])");
 private Pattern findAssignments = Pattern.compile("let [a-z] = ([a-z]|[0-9]+)");
+//private Pattern findAssignments = Pattern.compile("let [a-z] = [^)]*");
 private int answer;
 
 private int findOperation(String input, HashMap<Character,Integer> vars){
@@ -63,7 +64,10 @@ private int findOperation(String input, HashMap<Character,Integer> vars){
 
 private void calculate(String input, int a, int b, HashMap<Character,Integer> vars) {
 	int sol=-1;
+	
 	String exp = input.substring(a,b);
+	exp = exp.replace("(","");
+	exp = exp.replace(")","");
 
 	Matcher m = findAssignments.matcher(exp);
 	if (m.find()) {
@@ -161,11 +165,11 @@ public static void main(String[] args) {
                 "(let x = 2) ^ (let y = 3);",                                                       // 8, returns 8
                 "(let y = 3) ^ (let x = 2);"                                                        // 9, returns 9
         };
-        for (int i = 0; i < inputs.length; i++)
-                System.out.println(String.format("%d -- %-90s %d", i+1, inputs[i], calc.execExpression(inputs[i])));
+//        for (int i = 0; i < inputs.length; i++)
+//                System.out.println(String.format("%d -- %-90s %d", i+1, inputs[i], calc.execExpression(inputs[i])));
 //        for (int i = 0; i < inputs.length; i++)
 //        	calc.execExpression(inputs[i]);
-
+        System.out.println(calc.execExpression(inputs[0]));
 
         // Part 2
         inputs = new String[] {
