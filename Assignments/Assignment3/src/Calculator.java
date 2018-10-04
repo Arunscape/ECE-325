@@ -38,7 +38,7 @@ private Pattern findAddSub = Pattern.compile("([0-9]+|[a-z]) (\\+|-) ([0-9]+|[a-
 private Pattern findAssignments = Pattern.compile("let [a-z] = [^;)]*");
 private int answer;
 
-private int findOperation(String input, HashMap<Character,Integer> vars){
+private int findOperation(String input, HashMap<Character,Integer> vars) throws RuntimeError{
 		Matcher m = null;
 		
 		HashMap<Character,Integer> dict;
@@ -80,7 +80,10 @@ private int findOperation(String input, HashMap<Character,Integer> vars){
 //    	   System.out.println(m.end());
 //    	   System.out.println(input.indexOf(")"));
 //    	   System.out.println(input);
-         calculate(input, m.start(), m.end(),dict);
+    	   
+    		   calculate(input, m.start(), m.end(),dict);
+    	  
+         
         }
        return answer;
        
@@ -94,7 +97,7 @@ private int findOperation(String input, HashMap<Character,Integer> vars){
 //	return -1;
 //}
 
-private void calculate(String input, int a, int b, HashMap<Character,Integer> vars) {
+private void calculate(String input, int a, int b, HashMap<Character,Integer> vars) throws RuntimeError {
 	int sol=-1;
 	
 	String exp = input.substring(a,b);
@@ -155,6 +158,7 @@ private void calculate(String input, int a, int b, HashMap<Character,Integer> va
 		case "+": sol = left+right; break;
 		case "-": sol = left-right; break;
 		case "^": sol = (int) Math.pow(left, right); break;
+		default: throw new RuntimeError("Operator expected");
 		}
 	
 	}
@@ -178,71 +182,40 @@ private void calculate(String input, int a, int b, HashMap<Character,Integer> va
 }
 
 private void checkSyntax(String input) throws SyntaxError {
-	
-	
-	
+		
 	// Check balanced brackets
-//	  s = Stack()
-//			    balanced = True
-//			    index = 0
-//			    while index < len(symbolString) and balanced:
-//			        symbol = symbolString[index]
-//			        if symbol == "(":
-//			            s.push(symbol)
-//			        else:
-//			            if s.isEmpty():
-//			                balanced = False
-//			            else:
-//			                s.pop()
-//
-//			        index = index + 1
-//
-//			    if balanced and s.isEmpty():
-//			        return True
-//			    else:
-//			        return False
-	String onlyBrackets = input.replaceAll("[^()]", "");
-	  Stack<Character> s= new Stack<Character>();
-	  Boolean balanced = true;
-	  int idx =0;
-	 while (idx < onlyBrackets.length() && balanced) {
-		 if(onlyBrackets.charAt(idx) == '(') { s.push('(') }
-		 else if (s.empty()) { 
-			 balanced=false;
-			 break;			 
-		 }
-		 else s.pop()
-		 idx++;
-	 }
-		  
-	  
-	  
-	  
+	String onlyBrackets = input.replaceAll("[^()]", "");	
 	
-	
+	while(onlyBrackets.contains("()")){
+		onlyBrackets = onlyBrackets.replaceAll("\\(\\)", "");
+	}
+	if (onlyBrackets.length() > 0) {
+		if (onlyBrackets.charAt(0) == '(') {
+			throw new SyntaxError(") expected");
+		}
+		else if (onlyBrackets.charAt(1) == ')') {
+			throw new SyntaxError("( expected");
+		}
+	}
 	// let without =
 	
 	// missing operator
 	
 	// let without )
-	Boolean valid = false;
-	if (!valid) {
-		throw new SyntaxError("REEEEEE");
-	}
 }
 
-public String execExpression(String exp) {
+public String execExpression(String exp) throws SyntaxError, RuntimeError{
         // TODO: Assignment 3 Part 1 -- parse, calculate the expression, and return the correct value
 
         // TODO: Assignment 3 Part 2-1 -- when come to illegal expressions, raise proper exceptions
-        try{
+        
         	checkSyntax(exp);
         	return Integer.toString(findOperation(exp,null));
-        }
-        catch(SyntaxError e) {
-        	System.out.print(e);
-        	return "";
-        }
+
+//        catch(RuntimeError e) {
+//        	System.out.print(e);
+//        	return "";
+//        }
         
         
 //        return returnValue;
@@ -269,9 +242,19 @@ public static void main(String[] args) {
         };
 //        for (int i = 0; i < inputs.length; i++)
 //                System.out.println(String.format("%d -- %-90s %d", i+1, inputs[i], calc.execExpression(inputs[i])));
-        for (int i = 0; i < inputs.length; i++)
-        	System.out.println(calc.execExpression(inputs[i]));
-//        System.out.println(calc.execExpression(inputs[8]));
+        try {
+            for (int i = 0; i < inputs.length; i++)
+            	System.out.println(calc.execExpression(inputs[i]));
+//            System.out.println(calc.execExpression(inputs[1]));
+        }
+     // no errors with these strings
+        catch(SyntaxError e) {
+        	; 
+        }
+        catch(RuntimeError e) {
+        	;
+        }
+
 
         // Part 2
         inputs = new String[] {
@@ -283,8 +266,18 @@ public static void main(String[] args) {
                 "(let x = 5) + y;"              // 6, runtime error: 'y' undefined
         };
         // TODO: Assignment 3 Part 2-2 -- catch and deal with your exceptions here
-//        for (int i = 0; i < inputs.length; i++)
-//                System.out.println(String.format("%d -- %-30s %d", i+1, inputs[i], calc.execExpression(inputs[i])));
+        try {
+//          for (int i = 0; i < inputs.length; i++)
+//          System.out.println(String.format("%d -- %-30s %d", i+1, inputs[i], calc.execExpression(inputs[i])));
+        	System.out.println(calc.execExpression(inputs[0]));
+        }
+        catch(SyntaxError e) {
+        	System.out.print(e);
+        }
+        catch(RuntimeError e) {
+        	System.out.println(e);
+        }
+//      System.out.println(calc.execExpression(inputs[1]));
 }
 
 }
