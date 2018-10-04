@@ -2,6 +2,7 @@
  * Assignment 3: Exception handling <br />
  * Calculator using BNF
  */
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Stack;
 import java.util.regex.*;
@@ -140,6 +141,10 @@ private void calculate(String input, int a, int b, HashMap<Character,Integer> va
 		// 0 - left operand
 		// 1- operator
 		// 2 - right operand
+		if (Arrays.asList(stuff).contains("=")) {
+			int tmpidx = Arrays.asList(stuff).indexOf("=");
+			throw new RuntimeError(String.format("%s undefined", stuff[tmpidx-2]));
+		}
 		int left; int right;
 		try {
 			left = Integer.parseInt(stuff[0]);
@@ -259,11 +264,11 @@ public static void main(String[] args) {
                 "(let y = 3) ^ (let x = 2);"                                                        // 9, returns 9
         };
 //        for (int i = 0; i < inputs.length; i++)
-//                System.out.println(String.format("%d -- %-90s %d", i+1, inputs[i], calc.execExpression(inputs[i])));
+//                
 
         try {
             for (int i = 0; i < inputs.length; i++)
-            	System.out.println(calc.execExpression(inputs[i]));
+            	System.out.println(String.format("%d -- %-90s %s", i+1, inputs[i], calc.execExpression(inputs[i])));
 //            System.out.println(calc.execExpression(inputs[6]));
         }
      // no errors with these strings
@@ -288,8 +293,8 @@ public static void main(String[] args) {
   
           for (int i = 0; i < inputs.length; i++)
               try {
-//                  System.out.println(String.format("%d -- %-30s %d", i+1, inputs[i], calc.execExpression(inputs[i])));
-              	System.out.println(calc.execExpression(inputs[4]));
+                  System.out.println(String.format("%d -- %-30s %d", i+1, inputs[i], calc.execExpression(inputs[i])));
+//              	System.out.println(calc.execExpression(inputs[4]));
               }
           catch(SyntaxError e) {
           	System.out.println(e);
