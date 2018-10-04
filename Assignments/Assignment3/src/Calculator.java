@@ -15,6 +15,7 @@ private Pattern findExponents = Pattern.compile("[0-9]+ \\^ [0-9]+");
 private Pattern findMulDiv = Pattern.compile("[0-9]+ (\\*|/) [0-9]+");
 private Pattern findAddSub = Pattern.compile("[0-9]+ (\\+|-) [0-9]+");
 private Pattern findAssignments = Pattern.compile("let [a-z] = ([a-z]|[0-9]+)");
+
 private void findOperation(String input){
 
         if (findBrackets.matcher(input).matches()) {
@@ -34,9 +35,12 @@ private void findOperation(String input){
         }
 }
 
-private int calculate(String op, int a, int b){
-        // findOperation();
-        return 0;
+private int calculate(int a, String op, int b) {
+	if(op=="*") {return a*b;}
+	else if(op=="/") {return a/b;}
+	else if(op=="+"){return a+b;}
+	else if(op=="-"){return a-b;}
+	return -1;
 }
 
 public int execExpression(String exp) {
@@ -45,7 +49,7 @@ public int execExpression(String exp) {
 
         // TODO: Assignment 3 Part 2-1 -- when come to illegal expressions, raise proper exceptions
 
-
+        
         return returnValue;
 }
 
