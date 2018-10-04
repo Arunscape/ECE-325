@@ -15,8 +15,8 @@ private Pattern findBrackets = Pattern.compile("\\([^\\(\\)]*\\)");
 private Pattern findExponents = Pattern.compile("([0-9]+|[a-z]) \\^ ([0-9]+|[a-z])");
 private Pattern findMulDiv = Pattern.compile("([0-9]+|[a-z]) (\\*|/) ([0-9]+|[a-z])");
 private Pattern findAddSub = Pattern.compile("([0-9]+|[a-z]) (\\+|-) ([0-9]+|[a-z])");
-private Pattern findAssignments = Pattern.compile("let [a-z] = ([a-z]|[0-9]+)");
-//private Pattern findAssignments = Pattern.compile("let [a-z] = [^)]*");
+//private Pattern findAssignments = Pattern.compile("let [a-z] = ([a-z]|[0-9]+)");
+private Pattern findAssignments = Pattern.compile("let [a-z] = [^;)]*");
 private int answer;
 
 private int findOperation(String input, HashMap<Character,Integer> vars){
@@ -36,7 +36,20 @@ private int findOperation(String input, HashMap<Character,Integer> vars){
         else if (findMulDiv.matcher(input).find())           { m=findMulDiv.matcher(input);           }
         else if (findAddSub.matcher(input).find())          { m=findAddSub.matcher(input);         }
         else if (findAssignments.matcher(input).find()) { m=findAssignments.matcher(input); }
-        else {return answer;}
+        else {
+//        	return input.length() == 1 ? Integer.parseInt(input) : answer;
+        	
+        	if (input.length() == 1) {
+        		try {
+        			return Integer.parseInt(input);
+        		}
+        		catch(NumberFormatException e) {
+        			//get the value of a variable
+        			return vars.get(input.charAt(0));
+        		}
+        	}
+        	else return answer;
+        }
         // R E C U R S I O N
 //        System.out.println(input);
         
@@ -77,14 +90,22 @@ private void calculate(String input, int a, int b, HashMap<Character,Integer> va
 //		System.out.println(m.group().charAt(4));
 //		System.out.println(m.group().substring(8));
 		
-		try {
-			sol = Integer.parseInt(m.group().substring(8));
-		}
-		catch(NumberFormatException e) {
-			// it's not a number, it's a variable
-			sol = vars.get(m.group().substring(8).charAt(0));
-		}
-		vars.put(m.group().charAt(4), sol);
+//		try {
+//			sol = Integer.parseInt(m.group().substring(8));
+//		}
+//		catch(NumberFormatException e) {
+//			// it's not a number, it's a variable
+//			sol = vars.get(m.group().substring(8).charAt(0));
+//		}
+//		vars.put(m.group().charAt(4), sol);
+		
+		// evaluate whatever the fuck is on the right side of let x = 
+		// and then set the value to x
+//		System.out.println(m.group().substring(8));
+		Character varName = m.group().charAt(4);
+		int whateverthefuckisontherightside = findOperation(m.group().substring(8), vars);
+		vars.put(varName, whateverthefuckisontherightside);
+		sol= whateverthefuckisontherightside;
 		
 	}
 	else {
@@ -169,7 +190,7 @@ public static void main(String[] args) {
 //                System.out.println(String.format("%d -- %-90s %d", i+1, inputs[i], calc.execExpression(inputs[i])));
 //        for (int i = 0; i < inputs.length; i++)
 //        	calc.execExpression(inputs[i]);
-        System.out.println(calc.execExpression(inputs[0]));
+        System.out.println(calc.execExpression(inputs[8]));
 
         // Part 2
         inputs = new String[] {
