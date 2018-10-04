@@ -4,6 +4,24 @@
  */
 import java.util.HashMap;
 import java.util.regex.*;
+
+@SuppressWarnings("serial")
+class SyntaxError extends Exception {
+
+	public SyntaxError(String message) {
+        super(message);
+    }
+
+}
+@SuppressWarnings("serial")
+class RuntimeError extends Exception {
+
+	public RuntimeError(String message) {
+        super(message);
+    }
+
+}
+
 public class Calculator {
 
 /**
@@ -158,12 +176,26 @@ private void calculate(String input, int a, int b, HashMap<Character,Integer> va
 //	return s
 }
 
-public int execExpression(String exp) {
+private void checkSyntax(String input) throws SyntaxError {
+	Boolean valid = false;
+	if (!valid) {
+		throw new SyntaxError("REEEEEE");
+	}
+}
+
+public String execExpression(String exp) {
         // TODO: Assignment 3 Part 1 -- parse, calculate the expression, and return the correct value
 
         // TODO: Assignment 3 Part 2-1 -- when come to illegal expressions, raise proper exceptions
+        try{
+        	checkSyntax(exp);
+        	return Integer.toString(findOperation(exp,null));
+        }
+        catch(SyntaxError e) {
+        	System.out.print(e);
+        	return "";
+        }
         
-        return findOperation(exp,null);
         
 //        return returnValue;
 }
@@ -173,6 +205,7 @@ public int execExpression(String exp) {
  * @param args          {@code String[]} Command line arguments
  */
 public static void main(String[] args) {
+	
         Calculator calc = new Calculator();
         // Part 1
         String[] inputs = {
