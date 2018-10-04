@@ -30,17 +30,17 @@ private void findOperation(String input, HashMap<String,Integer> vars){
 		
 		
         if         (findBrackets.matcher(input).find())        { m=findBrackets.matcher(input);        }
-        else if (findExponents.matcher(input).matches())     { m=findExponents.matcher(input);     }
-        else if (findMulDiv.matcher(input).matches())           { m=findMulDiv.matcher(input);           }
-        else if (findAddSub.matcher(input).matches())          { m=findAddSub.matcher(input);         }
-        else if (findAssignments.matcher(input).matches()) { m=findAssignments.matcher(input); }
+        else if (findExponents.matcher(input).find())     { m=findExponents.matcher(input);     }
+        else if (findMulDiv.matcher(input).find())           { m=findMulDiv.matcher(input);           }
+        else if (findAddSub.matcher(input).find())          { m=findAddSub.matcher(input);         }
+        else if (findAssignments.matcher(input).find()) { m=findAssignments.matcher(input); }
         else {return;}
         // R E C U R S I O N
 //        System.out.println(input);
         
         
        if(m.find()) {
-    	   System.out.println(input.substring(m.start(), m.end()));
+//    	   System.out.println(input.substring(m.start(), m.end()));
          calculate(input, m.start(), m.end(),dict);
         }
         
@@ -57,6 +57,11 @@ private void findOperation(String input, HashMap<String,Integer> vars){
 
 private void calculate(String input, int a, int b, HashMap<String,Integer> vars) {
 	int sol=-1;
+	Matcher m = findAssignments.matcher(input);
+	if (m.find()) {
+		// find the variable
+		System.out.println(m.group());
+	}
 	
 //	System.out.println(input);
 //	String op = Pattern.compile("[*/+-]").matcher(input).group();
