@@ -12,9 +12,9 @@ public class Calculator {
  * @return              {@code int}    The value of the expression
  */
 private Pattern findBrackets = Pattern.compile("\\([^\\(\\)]*\\)");
-private Pattern findExponents = Pattern.compile("[0-9]+ \\^ [0-9]+");
-private Pattern findMulDiv = Pattern.compile("[0-9]+ (\\*|/) [0-9]+");
-private Pattern findAddSub = Pattern.compile("[0-9]+ (\\+|-) [0-9]+");
+private Pattern findExponents = Pattern.compile("([0-9]+|[a-z]) \\^ ([0-9]+|[a-z])");
+private Pattern findMulDiv = Pattern.compile("([0-9]+|[a-z]) (\\*|/) ([0-9]+|[a-z])");
+private Pattern findAddSub = Pattern.compile("([0-9]+|[a-z]) (\\+|-) ([0-9]+|[a-z])");
 private Pattern findAssignments = Pattern.compile("let [a-z] = ([a-z]|[0-9]+)");
 private int answer;
 
@@ -62,8 +62,9 @@ private int findOperation(String input, HashMap<Character,Integer> vars){
 //}
 
 private void calculate(String input, int a, int b, HashMap<Character,Integer> vars) {
-	int sol;
+	int sol=-1;
 	String exp = input.substring(a,b);
+
 	Matcher m = findAssignments.matcher(exp);
 	if (m.find()) {
 		// in an expression let x = #, the variable is; always the 4th index in the string
@@ -77,20 +78,41 @@ private void calculate(String input, int a, int b, HashMap<Character,Integer> va
 	}
 	else {
 		String[] stuff = exp.split(" ");
-		System.out.println(stuff);
-//		Matcher m1 = Pattern.compile("[*/+-]").matcher(input);
-//		if(m1.find()) {
-//			String op = m1.group();
-//			System.out.println(op);
-//		}
-		sol = 10;
+		// 0 - left operand
+		// 1- operator
+		// 2 - right operand
+		int left; int right;
+		try {
+			left = Integer.parseInt(stuff[0]);
+		}
+		catch(NumberFormatException e) {
+			// it's not a number, it's a variable
+			left = vars.get(stuff[0].charAt(0));
+		}
+		try {
+			right = Integer.parseInt(stuff[2]);
+		}
+		catch(NumberFormatException e) {
+			right = vars.get(stuff[2].charAt(0));
+		}
+		
+		switch(stuff[1]) {
+		case "*": sol = left*right; break;
+		case "/": sol = left/right; break;
+		case "+": sol = left+right; break;
+		case "-": sol = left-right; break;
+		}
+	
 	}
 	answer=sol;
 	
 //	System.out.println(input);
 //	String op = Pattern.compile("[*/+-]").matcher(input).group();
 //	System.out.println(op);
-	
+//	System.out.println(
+//			input.substring(0, a)+
+//			Integer.toString(sol)+
+//			input.substring(b));
 	findOperation(
 			input.substring(0, a)+
 			Integer.toString(sol)+
@@ -134,7 +156,7 @@ public static void main(String[] args) {
 //                System.out.println(String.format("%d -- %-90s %d", i+1, inputs[i], calc.execExpression(inputs[i])));
 //        for (int i = 0; i < inputs.length; i++)
 //        	calc.execExpression(inputs[i]);
-        System.out.println(calc.execExpression(inputs[1]));
+        System.out.println(calc.execExpression(inputs[4]));
 
         // Part 2
         inputs = new String[] {
