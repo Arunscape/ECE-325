@@ -32,7 +32,7 @@ public class SquareRootTests {
     @Test public void testRandomNegitiveSquareRoot() {
         // The result should be a complex number i.e. Double.isNaN()
     	double x = (Math.random() - 0.5) * 200000000;
-    	while (x > 0) {
+    	while (x >= 0) {
     		x = (Math.random() - 0.5) * 200000000;
     	}
     	assertTrue(calc.sqrt(x).isNaN());
