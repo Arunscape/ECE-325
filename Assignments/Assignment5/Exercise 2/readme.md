@@ -1,0 +1,46 @@
+Consider the code below. It describes 5 types either classes or interfaces.
+U u; 
+G g; 
+B b; 
+Z z; 
+X x;
+
+The following assignments are all legal and compile:
+u = z; 
+x = b; 
+g = u; 
+x = u;
+
+However, the following assignments are all illegal and cause compilation errors:
+u = b; 
+x = g; 
+b = u; 
+z = u; 
+g = x;
+
+What can you state about the types and their relationships (to each other)? Provide at least one possible answer.
+
+
+From the legal assignments, we know that the class on the left is broader than the one on the right. So,
+U  X  G  X
+|  |  |  |
+Z  B  U  U
+
+From the illegal assignments, we know that either the class on the right is broader than the one on the left
+or that the class on the right has an abstract method or is an interface
+B  G  U  U  X
+~  ~  ~  ~  ~
+U  X  B  Z  G
+
+=================================================================================================================
+=================================================================================================================
+Putting this together, we get:
+            X   
+           / \   G
+          /   \ /implements
+         B     U
+              /
+             Z
+
+
+
