@@ -28,6 +28,10 @@ public class PersonTest {
 		assertEquals(c.compare(p2, p1), 1);
 		assertEquals(c.compare(p1, new Person(10)), 0);
 		
+		
+//		assertTrue(c.equals(p1, new Person(10)));
+//		assertFalse(c.equals(p1, p2));
+		
 	}
 	
 

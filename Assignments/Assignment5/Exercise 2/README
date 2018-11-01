@@ -37,10 +37,15 @@ U  X  B  Z  G
 Putting this together, we get:
             X   
            / \   G
-          /   \ /implements
+implements/   \ /implements
          B     U
               /
              Z
 
 
-
+Since we can't have multiple inheritance, one possible solution is:
+- X is an interface
+- G is an interface
+- B is a class which implements X
+- U is a class which implements X, G
+- Z is a class which extends U
