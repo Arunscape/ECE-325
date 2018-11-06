@@ -3,11 +3,12 @@ import java.util.Vector;
 
 public class PlaylistTest extends TestCase {
 
-    private Playlist<Song> aPlaylist;
+    private Playlist<Song> aPlaylist, sortedlist;
     private Song song1, song2, song3, song4, duplicate_song, nullSong;
 
     public void setUp() {
         aPlaylist= new Playlist<Song>("Playlist Title");
+        sortedlist= new Playlist<Song>("Sorted Playlist");
         song1 = new Song("Artist1", "Title1", 5.00);
         song2 = new Song("Artist1", "Title2", 4.50);
         song3 = new Song("Artist2", "Title1", 4.00);
@@ -25,6 +26,43 @@ public class PlaylistTest extends TestCase {
         aPlaylist.addtoPlist(song2);
         aPlaylist.addtoPlist(song3);
         aPlaylist.addtoPlist(song4);
+    }
+    
+    protected void fillunsortedPlaylist() {
+    	aPlaylist.addtoPlist(new Song("Artist 6", "Title 9", 2));
+    	aPlaylist.addtoPlist(new Song("Artist 9", "Title 7", 2));
+    	aPlaylist.addtoPlist(new Song("Artist 2", "Title 4", 2));
+    	aPlaylist.addtoPlist(new Song("Artist 4", "Title 3", 2));
+    	aPlaylist.addtoPlist(new Song("Artist 3", "Title 8", 2));
+    	aPlaylist.addtoPlist(new Song("Artist 7", "Title 2", 2));
+    	aPlaylist.addtoPlist(new Song("Artist 1", "Title 5", 2));
+    	aPlaylist.addtoPlist(new Song("Artist 8", "Title 1", 2));
+    	aPlaylist.addtoPlist(new Song("Artist 5", "Title 6", 2));
+    }
+    
+    protected void fillsortedPlaylistByArtist() {
+    	sortedlist.addtoPlist(new Song("Artist 1", "Title 5", 2));
+    	sortedlist.addtoPlist(new Song("Artist 2", "Title 4", 2));
+    	sortedlist.addtoPlist(new Song("Artist 3", "Title 8", 2));
+    	sortedlist.addtoPlist(new Song("Artist 4", "Title 3", 2));
+    	sortedlist.addtoPlist(new Song("Artist 5", "Title 6", 2));
+    	sortedlist.addtoPlist(new Song("Artist 6", "Title 9", 2));
+    	sortedlist.addtoPlist(new Song("Artist 7", "Title 2", 2));
+    	sortedlist.addtoPlist(new Song("Artist 8", "Title 1", 2));
+    	sortedlist.addtoPlist(new Song("Artist 9", "Title 7", 2));    	
+    }
+    
+    protected void fillsortedPlaylistByTitle() {
+    	sortedlist.addtoPlist(new Song("Artist 8", "Title 1", 2));
+    	sortedlist.addtoPlist(new Song("Artist 7", "Title 2", 2));
+    	sortedlist.addtoPlist(new Song("Artist 4", "Title 3", 2));
+    	sortedlist.addtoPlist(new Song("Artist 2", "Title 4", 2));
+    	sortedlist.addtoPlist(new Song("Artist 1", "Title 5", 2));
+    	sortedlist.addtoPlist(new Song("Artist 5", "Title 6", 2));
+    	sortedlist.addtoPlist(new Song("Artist 9", "Title 7", 2)); 
+    	sortedlist.addtoPlist(new Song("Artist 3", "Title 8", 2));
+    	sortedlist.addtoPlist(new Song("Artist 6", "Title 9", 2));
+    	
     }
 
     public void test_Constructor() {
@@ -121,12 +159,35 @@ public class PlaylistTest extends TestCase {
     }
 
     public void test_sortByArtist() {
-        // TODO: Assignment 6 -- create new test case here: sort by artist
-
+    	fillunsortedPlaylist();
+    	System.out.println("Unsorted Playlist:");
+    	for (Song s: aPlaylist)
+    		System.out.println(s);
+    	System.out.println();
+    	System.out.println("Sorted by Artist:");
+    	aPlaylist.sortByArtist();
+    	for (Song s: aPlaylist)
+    		System.out.println(s);
+    	System.out.println();
+    	
+    	fillsortedPlaylistByArtist();
+    	assertEquals(aPlaylist, sortedlist);
     }
 
     public void test_sortByTitle() {
-        // TODO: Assignment 6 -- create new test case here: sort by title
+    	fillunsortedPlaylist();
+    	System.out.println("Unsorted Playlist:");
+    	for (Song s: aPlaylist)
+    		System.out.println(s);
+    	System.out.println();
+    	System.out.println("Sorted by Title:");
+    	aPlaylist.sortByTitle();
+    	for (Song s: aPlaylist)
+    		System.out.println(s);
+    	System.out.println();
+    	
+    	fillsortedPlaylistByTitle();
+    	assertEquals(aPlaylist,sortedlist);
 
     }
 }

@@ -1,10 +1,11 @@
+import java.util.Collections;
+
 /**
  * Assignment 6: Test Driven Development <br />
  * The {@code Playlist} class
  */
 @SuppressWarnings("serial")
 public class Playlist<E extends Song> extends java.util.Vector<E> {
-    java.util.Iterator<E> itr = this.iterator();       // Generic Iterator; Use it whenever you need it!
     
     private String title;
     
@@ -51,21 +52,16 @@ public class Playlist<E extends Song> extends java.util.Vector<E> {
     }
     
     public Boolean hasTitle(String t) {
-    	while (itr.hasNext()) {
-    		if (itr.next().getTitle().toLowerCase().equals(t)){
-    			return true;
-    		}
-    	}
-    	return false;
+    	return this.title.equalsIgnoreCase(t);
     }
     
-    public Boolean hasArtist(String t) {
-    	while (itr.hasNext()) {
-    		if (itr.next().getArtist().toLowerCase().equals(t)){
-    			return true;
-    		}
-    	}
-    	return false;
+    public Boolean hasArtist(String a) {
+    	for (Song s: this) {
+		if(s.getArtist().equalsIgnoreCase(a)) {
+			return true;
+		}
+	}
+	return false;
     }
     
     public int numberOfSongs() {
@@ -74,24 +70,24 @@ public class Playlist<E extends Song> extends java.util.Vector<E> {
     
     public int numberOfArtists() {
     	java.util.Set<String> artists = new java.util.HashSet<String>();
-    	while (itr.hasNext()) {
-    		artists.add(itr.next().getArtist());
+    	for (Song s: this) {
+    		artists.add(s.getArtist().toLowerCase());
     	}
     	return artists.size();
     }
     
     public int numberOfTitles() {
     	java.util.Set<String> titles = new java.util.HashSet<String>();
-    	while (itr.hasNext()) {
-    		titles.add(itr.next().getTitle().toLowerCase());
+    	for (Song s: this) {
+    		titles.add(s.getTitle().toLowerCase());
     	}
     	return titles.size();
     }
     
     public double playTime() {
     	double t = 0;
-    	while (itr.hasNext()) {
-    		t += itr.next().getLength();
+    	for (Song s: this) {
+    		t += s.getLength();
     	}
     	return t;
     }
@@ -100,6 +96,30 @@ public class Playlist<E extends Song> extends java.util.Vector<E> {
     	return this.indexOf(s);
     }
     
+    public void sortByArtist() {
+    	
+    	Collections.sort(this, new java.util.Comparator<Song>() {
+
+			@Override
+			public int compare(Song s1, Song s2) {
+				return s1.getArtist().compareTo(s2.getArtist());
+			}
+    		
+    	});
+    	
+    }
     
+    public void sortByTitle() {
+    	
+    	Collections.sort(this, new java.util.Comparator<Song>() {
+
+			@Override
+			public int compare(Song s1, Song s2) {
+				return s1.getTitle().compareTo(s2.getTitle());
+			}
+    		
+    	});
+    	
+    }
    
 }

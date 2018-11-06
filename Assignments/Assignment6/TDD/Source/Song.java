@@ -37,8 +37,7 @@ public class Song {
 	public boolean equals(Object s) {
 		return ((Song) s).isArtist(this.artist) && 
 			   ((Song) s).isTitle(this.title) && 
-			   ((Song) s).getLength() == this.length
-			   ? true : false;
+			   ((Song) s).getLength() == this.length;
 					   
 	}
 	
