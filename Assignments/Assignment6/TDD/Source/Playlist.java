@@ -30,8 +30,7 @@ public class Playlist<E extends Song> extends java.util.Vector<E> {
     	else {
     		return false;
     	}
-//    	this.add(s);
-//    	return true;
+
     }
     
     public Boolean removeFromPlist(E s) {
