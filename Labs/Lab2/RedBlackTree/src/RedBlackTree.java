@@ -2,8 +2,7 @@
  * Lab 2: Debugging with Eclipse and Red Black Tree) <br />
  * The {@code RedBlackTree} class of integers only <br />
  * Reference: <a href="https://en.wikipedia.org/wiki/Red%E2%80%93black_tree">
- *              https://en.wikipedia.org/wiki/Red%E2%80%93black_tree
- *            </a>
+ * https://en.wikipedia.org/wiki/Red%E2%80%93black_tree </a>
  */
 
 public class RedBlackTree {
@@ -11,249 +10,264 @@ public class RedBlackTree {
 	public static final boolean RED = false;
 
 	/**
-     * Root node of the red black tree
-     */
-    private Node root = null;
+	 * Root node of the red black tree
+	 */
+	private Node root = null;
 
-    /**
-     * Size of the tree
-     */
-    private int size = 0;
+	/**
+	 * Size of the tree
+	 */
+	private int size = 0;
 
-    /**
-     * Search the tree to find if the value is contained
-     * @param value     {@code int} the value to be checked
-     * @return          {@code boolean} If contains, return {@code true}, otherwise return {@code false}
-     */
-    public boolean contains(int value) {
-        // TODO: Lab 2 Part 2-1 -- find an integer from the tree
+	/**
+	 * Search the tree to find if the value is contained
+	 * 
+	 * @param value {@code int} the value to be checked
+	 * @return {@code boolean} If contains, return {@code true}, otherwise return
+	 *         {@code false}
+	 */
+	public boolean contains(int value) {
+		// TODO: Lab 2 Part 2-1 -- find an integer from the tree
 
-        return false;
-    }
+		return false;
+	}
 
-    /**
-     * Insert an integer to the tree
-     * @param data      {@code int} New element to be inserted
-     */
-    public void insert(int value) {
-        // RED BLACK INSERT
-    	
-    	//BST Insert
-    	Node x = new Node(value);
-    	Node y;
-    	this.colourRed(x);
-    	
-    	bstInsert(x);
-    	
-//    	while (x != this.root && x.isRED()) {
-//    		if(x.parent == x.parent.parent.left) {
-//    			y = x.parent.parent.right;
-//    			if (y.isRED()) {
-//    				this.case1(x, y);
-//    			}
-//    			else if (x == x.parent.right) {
-//    				this.case2(x, y);
-//    			}
-//    			this.case3(x, y);
-//    		}
-//    		else {
-//    			//same thing but switch left and right
-//    			y = x.parent.parent.right;
-//    			if (y.isRED()) {
-//    				this.case4(x,y);
-//    			}
-//    			else if (x == x.parent.left) {
-//    				this.case5(x,y);
-//    			}
-//    			this.case3(x, y);
-//    		}
-//    	}
-//    	this.colourBlack(this.root);    	
-    	
-    	//test rotation
-    	
-    	this.size++;
-    }
-    
-    public void bstInsert(Node n) {
-    	this.root = recursiveInsert(this.root, n);
-    }
-    
-    public Node recursiveInsert(Node root, Node n) {
+	/**
+	 * Insert an integer to the tree
+	 * 
+	 * @param data {@code int} New element to be inserted
+	 */
+	public void insert(int value) {
+		// RED BLACK INSERT
+		this.size++;
+		// BST Insert
 
-    	if ( root == null || root.value == null) {
-    		return n;
-    	}
-    	else if (n.value < root.value) {
-    		root.left = recursiveInsert(root.left, n);
-    		root.left.parent = root;
-    	}
-    	else if (n.value > root.value) {
-    		root.right = recursiveInsert(root.right, n);
-    		root.right.parent = root;
-    	}
-    	return root;
-    }
-    
-    private Node case1(Node x, Node y) {
-    	System.out.println("Case1");
-    	
-    	this.colourBlack(x.parent, y);
-    	this.colourRed(x.parent.parent);
-    	return x.parent.parent;
-    }
-    
-    private Node case2(Node x, Node y) {
-    	System.out.println("Case 2");
-    	
-    	this.rotateLeft(x.parent);
-    	
-    	return null;
-    }
-    
-    private Node case3(Node x, Node y) {
-    	System.out.println("Case 3");
-    	
-    	this.rotateRight(x.parent.parent);
-    	
-    	return null;
-    }
-    
-    private Node case4(Node x, Node y) {
-    	System.out.println("Case4");
-    	
-    	this.colourBlack(x.parent, y);
-    	this.colourRed(x.parent.parent);
-    	return x.parent.parent;
-    }
-    
-    private Node case5(Node x, Node y) {
-    	System.out.println("Case 5");
-    	
-    	this.rotateLeft(x.parent);
-    	
-    	return null;
-    }
-    
-    public void colourBlack(Node ...nodes) {
-    	for (Node n: nodes)
-    		n.colour = BLACK;
-    }
-    
-    public void colourRed(Node ...nodes) {
-    	for (Node n: nodes)
-    		n.colour = RED;
-    }
-    
-    public void rotateLeft(Node n) {
-    	
-    	if (n.right.isNil()) {
-    		return;
-    	}
-    	
-    	Node oldRight = n.right;
-    	
-    	n.right = oldRight.left;
-    	
-    	if (!oldRight.left.isNil()) {
-    		oldRight.left.parent = n;
-    	}
-    	oldRight.parent = n.parent;
-    	if (n == this.root) {
-    		this.root = oldRight;
-    	}
-    	else if (n == n.parent.left) {
-    		n.parent.left = oldRight;
-    	}
-    	else {
-    		n.parent.right = oldRight;
-    	}
-    	oldRight.left = n;
-    	n.parent = oldRight;
-    }
-    
-public void rotateRight(Node n) {
-    	
-    	if (n.left.isNil()) {
-    		return;
-    	}
-    	
-    	Node oldLeft = n.left;
-    	
-    	n.left = oldLeft.right;
-    	
-    	if (!oldLeft.right.isNil()) {
-    		oldLeft.right.parent = n;
-    	}
-    	oldLeft.parent = n.parent;
-    	if (n == this.root) {
-    		this.root = oldLeft;
-    	}
-    	else if (n == n.parent.right) {
-    		n.parent.right = oldLeft;
-    	}
-    	else {
-    		n.parent.left = oldLeft;
-    	}
-    	oldLeft.right = n;
-    	n.parent = oldLeft;
-    }
+		Node x = new Node(value);
+		this.colourRed(x);
 
-    /**
-     * Get the size of the tree
-     * @return          {@code int} size of the tree
-     */
-    public int size() {
-        return size;
-    }
+		bstInsert(x);
 
-    
-    public String inOrder(Node root) {
-    	   return
-    	      (root.left == null ? "" : inOrder(root.left) )+
-    	       root + " " +
-    	      (root.right == null ? "" : inOrder(root.right) );
-    	}
-    
-    /**
-     * Cast the tree into a string
-     * @return          {@code String} Printed format of the tree
-     */
-    @Override
-    public String toString() {
-        // TODO: Lab 2 Part 2-3 -- print the tree, where each node contains both value and color
-        // You can print it by in-order traversal
+		fixRedBlackProperties(x);
+	}
 
-        return this.inOrder(this.root);
-    }
-    
-    void printGivenLevel(Node root, int level) 
-    { 
-        if (root == null) 
-            return; 
-        if (level == 1) 
-            System.out.print(root); 
-        else if (level > 1) 
-        { 
-            printGivenLevel(root.left, level-1); 
-            printGivenLevel(root.right, level-1); 
-        } 
-    } 
-    
-    void printBreadthFirstSearch() {
-    	System.out.println("Breadth first search");
-        for (int i=1; i<=5; i++) 
-        { 
-            this.printGivenLevel(this.root, i); 
-            System.out.println(); 
-        } 
-    }
+	public void bstInsert(Node n) {
+		this.root = recursiveInsert(this.root, n);
+	}
 
-    /**
-     * Main entry
-     * @param args      {@code String[]} Command line arguments
-     */
-    public static void main(String[] args) {
+	public Node recursiveInsert(Node root, Node n) {
+
+		if (root == null || root.value == null) {
+			return n;
+		} else if (n.value < root.value) {
+			root.left = recursiveInsert(root.left, n);
+			root.left.parent = root;
+		} else if (n.value > root.value) {
+			root.right = recursiveInsert(root.right, n);
+			root.right.parent = root;
+		}
+		return root;
+	}
+
+	public void fixRedBlackProperties(Node n) {
+
+		if (n.parent == null) {
+			insertCase1(n);
+		} else if (n.parent.isBLACK()) {
+			insertCase2(n);
+		} else if (n.uncle().isRED()) {
+			insertCase3(n);
+		} else {
+			insertCase4(n);
+		}
+
+	}
+
+	public void insertCase1(Node n) {
+		// the current node is the root of the tree
+		// recolour it black to satisfy property 2 (the root is black)
+		// Since this adds one black node to every path at once, property 5
+		// (all paths from any given node to its leaf nodes contain the same number of
+		// black nodes)
+		// is not violated.
+		if (n == this.root)
+			this.colourBlack(n);
+	}
+
+	public void insertCase2(Node n) {
+		// the current node's parent P is black, so property 4
+		// (both children of every red node are black) is not invalidated
+		// Property 5 (all paths from any given node to its leaf nodes contain the same
+		// number of black nodes)
+		// is not threatened, because the current node N has two black leaf children,
+		// but because n is red, the paths through each of its children have the same
+		// number of black nodes as the path
+		// through the leaf it replaced, which was black, and so this property remains
+		// satisfied.
+		
+		; // nothing to do lmao
+	}
+
+	public void insertCase3(Node n) {
+		// if both the parent P and the uncle U are red,
+		// then both of them can be recoloured black and the grandparent
+		// becomes red to maintain property 5 (all paths from any given node to its leaf
+		// nodes contain the same number of black nodes).
+		// Since any path through the parent or uncle must pass through the grandparent,
+		// the number of black nodes on these paths has not changed.
+		// However, the grandparent G may now violate Property 2 (The root is black)
+		// if it is the root or Property 4 (Both children of every red node are black)
+		// if it has a red parent.
+		// To fix this, the tree's red-black repair procedure is rerun on G.
+		this.colourBlack(n.parent, n.uncle());
+		this.colourRed(n.parent.parent);
+		this.fixRedBlackProperties(n.parent.parent);
+	}
+
+	public void insertCase4(Node n) {
+		
+		if (n == n.parent.right)
+	}
+	
+	public void insertCase4(Node n) {
+
+		if (n == n.parent.parent.left.right) {
+			this.rotateLeft(n.parent);
+			n = n.left;
+		} else if (n == n.parent.parent.right.left) {
+			this.rotateRight(n.parent);
+			;
+			n = n.right;
+		}
+
+		insertCase4Step2(n);
+	}
+
+	public void insertCase4Step2(Node n) {
+	
+		if (n == n.parent.left) {
+			this.rotateRight(n.parent.parent);
+		} else {
+			this.rotateLeft(n.parent.parent);
+		}
+		this.colourBlack(n.parent);
+		this.colourRed(n.parent.parent);
+	}
+
+	public void colourBlack(Node... nodes) {
+		for (Node n : nodes)
+			if (n != null && !n.isNil()) // nils are already black
+				n.colour = BLACK;
+	}
+
+	public void colourRed(Node... nodes) {
+		for (Node n : nodes)
+			if (n != null && !n.isNil())
+				n.colour = RED;
+	}
+
+	public void rotateLeft(Node n) {
+
+		if (n.right.isNil()) {
+			return;
+		}
+
+		Node oldRight = n.right;
+
+		n.right = oldRight.left;
+
+		if (!oldRight.left.isNil()) {
+			oldRight.left.parent = n;
+		}
+		oldRight.parent = n.parent;
+		if (n == this.root) {
+			this.root = oldRight;
+		} else if (n == n.parent.left) {
+			n.parent.left = oldRight;
+		} else {
+			n.parent.right = oldRight;
+		}
+		oldRight.left = n;
+		n.parent = oldRight;
+	}
+
+	public void rotateRight(Node n) {
+
+		if (n.left.isNil()) {
+			return;
+		}
+
+		Node oldLeft = n.left;
+
+		n.left = oldLeft.right;
+
+		if (!oldLeft.right.isNil()) {
+			oldLeft.right.parent = n;
+		}
+		oldLeft.parent = n.parent;
+		if (n == this.root) {
+			this.root = oldLeft;
+		} else if (n == n.parent.right) {
+			n.parent.right = oldLeft;
+		} else {
+			n.parent.left = oldLeft;
+		}
+		oldLeft.right = n;
+		n.parent = oldLeft;
+	}
+
+	/**
+	 * Get the size of the tree
+	 * 
+	 * @return {@code int} size of the tree
+	 */
+	public int size() {
+		return size;
+	}
+
+	public String inOrder(Node root) {
+		return (root.left == null ? "" : inOrder(root.left)) + root + " "
+				+ (root.right == null ? "" : inOrder(root.right));
+	}
+
+	/**
+	 * Cast the tree into a string
+	 * 
+	 * @return {@code String} Printed format of the tree
+	 */
+	@Override
+	public String toString() {
+		// TODO: Lab 2 Part 2-3 -- print the tree, where each node contains both value
+		// and color
+		// You can print it by in-order traversal
+
+		return this.inOrder(this.root);
+	}
+
+	void printGivenLevel(Node root, int level) {
+		if (root == null)
+			return;
+		if (level == 1)
+			System.out.print(root);
+		else if (level > 1) {
+			printGivenLevel(root.left, level - 1);
+			printGivenLevel(root.right, level - 1);
+		}
+	}
+
+	void printBreadthFirstSearch() {
+		System.out.println("Breadth first search");
+		for (int i = 1; i <= 5; i++) {
+			this.printGivenLevel(this.root, i);
+			System.out.println();
+		}
+	}
+
+	/**
+	 * Main entry
+	 * 
+	 * @param args {@code String[]} Command line arguments
+	 */
+	public static void main(String[] args) {
 //        RedBlackTree rbt = new RedBlackTree();
 //        for (int i = 0; i < 10; i++)
 //            rbt.insert((int) (Math.random() * 200));
@@ -261,69 +275,81 @@ public void rotateRight(Node n) {
 //        assert rbt.root.colour == RedBlackTree.Node.BLACK;
 //        System.out.println(rbt.root);           // This helps to figure out the tree structure
 //        System.out.println(rbt);
-    	RedBlackTree rbt = new RedBlackTree();
-        rbt.insert(7);
-        rbt.insert(3);
-        rbt.insert(18);
-        rbt.insert(10);
-        rbt.insert(22);
-        rbt.insert(8);
-        rbt.insert(11);
-        rbt.insert(26);
-        
-        rbt.insert(15);
-        
-        rbt.printBreadthFirstSearch();
-        
-        rbt.rotateRight(rbt.root.right);
-//        rbt.rotateRight(rbt.root.right);
-        
-        rbt.printBreadthFirstSearch();
-    }
 
+		RedBlackTree rbt = new RedBlackTree();
+		rbt.insert(7);
+		rbt.printBreadthFirstSearch();
+		rbt.insert(3);
+		rbt.printBreadthFirstSearch();
+		rbt.insert(18);
+		rbt.printBreadthFirstSearch();
+		rbt.insert(10);
+		rbt.printBreadthFirstSearch();
+		rbt.insert(22);
+		rbt.printBreadthFirstSearch();
+		rbt.insert(8);
+		rbt.printBreadthFirstSearch();
+		rbt.insert(11);
+		rbt.printBreadthFirstSearch();
+		rbt.insert(26);
+		rbt.printBreadthFirstSearch();
+		rbt.insert(15);
+		rbt.printBreadthFirstSearch();
 
-    /**
-     * The {@code Node} class for {@code RedBlackTree}
-     */
-    private class Node {
-        public static final boolean BLACK = true;
-        public static final boolean RED = false;
+//		rbt.rotateRight(rbt.root.right);
+////        rbt.rotateRight(rbt.root.right);
+//
+//		rbt.printBreadthFirstSearch();
+	}
 
-        public Integer value;
-        public boolean colour = BLACK;
-        public Node parent = null, left = null, right = null;
+	/**
+	 * The {@code Node} class for {@code RedBlackTree}
+	 */
+	private class Node {
+		public static final boolean BLACK = true;
+		public static final boolean RED = false;
 
-        public Node(Integer value) {             // By default, a new node is black with two NIL children
-            this.value = value;
-            if (value != null) {
-                left = new Node(null);         // And the NIL children are both black
-                left.parent = this;
-                right = new Node(null);
-                right.parent = this;
-            }
-        }
-        
-        public Boolean isRED() {
-        	return !this.colour;
-        }
-        
-        public Boolean isBLACK() {
-        	return this.colour;
-        }
-        
-        public Boolean isNil() {
-        	return this.value == null;
-        }
+		public Integer value;
+		public boolean colour = BLACK;
+		public Node parent = null, left = null, right = null;
 
-        /**
-         * Print the tree node: red node wrapped by "<>"; black node by "[]"
-         * @return          {@code String} The printed string of the tree node
-         */
-        @Override public String toString() {
-            if (value == null)
-                return "";
-            return (colour == RED) ? "<" + value + ">" : "[" + value + "]";
-        }
-    }
+		public Node(Integer value) { // By default, a new node is black with two NIL children
+			this.value = value;
+			if (value != null) {
+				left = new Node(null); // And the NIL children are both black
+				left.parent = this;
+				right = new Node(null);
+				right.parent = this;
+			}
+		}
+
+		public Boolean isRED() {
+			return !this.colour;
+		}
+
+		public Boolean isBLACK() {
+			return this.colour;
+		}
+
+		public Boolean isNil() {
+			return this.value == null;
+		}
+
+		public Node uncle() {
+			return this == this.parent.left ? this.parent.right : this.parent.left;
+		}
+
+		/**
+		 * Print the tree node: red node wrapped by "<>"; black node by "[]"
+		 * 
+		 * @return {@code String} The printed string of the tree node
+		 */
+		@Override
+		public String toString() {
+			if (value == null)
+				return "";
+			return (colour == RED) ? "<" + value + ">" : "[" + value + "]";
+		}
+	}
 
 }
