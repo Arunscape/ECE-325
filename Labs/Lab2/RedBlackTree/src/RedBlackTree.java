@@ -86,9 +86,11 @@ public class RedBlackTree {
     	}
     	else if (n.value < root.value) {
     		root.left = recursiveInsert(root.left, n);
+    		root.left.parent = root;
     	}
     	else if (n.value > root.value) {
     		root.right = recursiveInsert(root.right, n);
+    		root.right.parent = root;
     	}
     	return root;
     }
