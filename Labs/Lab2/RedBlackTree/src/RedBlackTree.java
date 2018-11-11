@@ -38,22 +38,50 @@ public class RedBlackTree {
     public void insert(int value) {
         // RED BLACK INSERT
     	
+    	//BST Insert
+    	Node x = new Node(value);
+    	this.colourRed(x);
+    	
+    	bstInsert(x);
+    	
+    	
+    	Node y = null;
+    	
+    	
+    	
+//    	Node x = recursiveInsert(this.root, value);
+//    	Node y = x.parent.parent.right;
+//    	
+//    	while (x != this.root && x.isRED()) {
+//    		if(x.parent == x.parent.parent.left) {
+//    			if(y.isRED()) {
+//    				x = this.case1(x,y);
+//    			}
+//    			else if (x == x.parent.right) {
+//    				this.case2(x,y);
+//    			}
+//    			this.case3(x,y);
+//    		}
+//    	}
     	this.size++;
-    	
-    	Node x = recursiveInsert(this.root, value);
-    	Node y = x.parent.parent.right;
-    	
-    	while (x.parent == null && x.isRED()) {
-    		if(x.parent == x.parent.parent.left) {
-    			if(y.isRED()) {
-    				x = this.case1(x,y);
-    			}
-    			else if (x == x.parent.right) {
-    				this.case2(x,y);
-    			}
-    		}
-    	}
+    }
+    
+    public void bstInsert(Node n) {
+    	this.root = recursiveInsert(this.root, n);
+    }
+    
+    public Node recursiveInsert(Node root, Node n) {
 
+    	if ( root == null || root.value == null) {
+    		return n;
+    	}
+    	else if (n.value < root.value) {
+    		root.left = recursiveInsert(root.left, n);
+    	}
+    	else if (n.value > root.value) {
+    		root.right = recursiveInsert(root.right, n);
+    	}
+    	return root;
     }
     
     private Node case1(Node x, Node y) {
@@ -67,6 +95,15 @@ public class RedBlackTree {
     private Node case2(Node x, Node y) {
     	System.out.println("Case 2");
     	
+    	this.rotateLeft(x.parent);
+    	
+    	return null;
+    }
+    
+    private Node case3(Node x, Node y) {
+    	System.out.println("Case 3");
+    	
+    	this.rotateRight(x.parent.parent);
     	
     	return null;
     }
@@ -81,28 +118,13 @@ public class RedBlackTree {
     		n.colour = RED;
     }
     
-    public Node recursiveInsert(Node root, int value) {
-    	// BINARY SEARCH TREE RECURSIVE INSERT
-    	if (root == null) {
-    		return new Node(value);
-    	}
-    	
-    	if (value < root.value) {
-    		root.left = recursiveInsert(root.left, value);
-    	}
-    	else if (value > root.value) {
-    		root.right = recursiveInsert(root.right, value);
-    	}
-    	return root;
-    }
-    
     public void rotateLeft(Node p) {
     	
     	Node n = p.right;
     	
-//    	if (p == this.root) {
-//    		this.root = n
-//    	}
+    	if (p == this.root) {
+    		this.root = n;
+    	}
     	
     	p.right = n.left;
     	n.left.parent = p;
@@ -117,9 +139,9 @@ public class RedBlackTree {
     	
     	Node n = p.left;
     	
-//    	if (p == this.root) {
-//    		this.root = n;
-//    	}
+    	if (p == this.root) {
+    		this.root = n;
+    	}
     	
     	p.left = n.right;
     	n.right.parent = p;
@@ -129,7 +151,7 @@ public class RedBlackTree {
     	p.parent=n;
     	
     }
-    n.left = n.left.right;
+
     public void commonRotateOperations(Node n, Node p) {
     	n.parent = p.parent;
     	p.parent.left = n;
@@ -150,15 +172,27 @@ public class RedBlackTree {
         return size;
     }
 
+    
+    public String inOrder(Node root, String tree){
+    	
+    	if (root == null) {
+    		return "";
+    	}
+        inOrder(root.left, tree);
+        tree += root.value + " ";
+        inOrder(root.right, tree );
+        return tree;
+    }
     /**
      * Cast the tree into a string
      * @return          {@code String} Printed format of the tree
      */
-    @Override public String toString() {
+    @Override
+    public String toString() {
         // TODO: Lab 2 Part 2-3 -- print the tree, where each node contains both value and color
         // You can print it by in-order traversal
-
-        return null;
+    	
+        return this.inOrder(this.root, "");
     }
 
     /**
@@ -166,9 +200,24 @@ public class RedBlackTree {
      * @param args      {@code String[]} Command line arguments
      */
     public static void main(String[] args) {
-        RedBlackTree rbt = new RedBlackTree();
-        for (int i = 0; i < 10; i++)
-            rbt.insert((int) (Math.random() * 200));
+//        RedBlackTree rbt = new RedBlackTree();
+//        for (int i = 0; i < 10; i++)
+//            rbt.insert((int) (Math.random() * 200));
+//
+//        assert rbt.root.colour == RedBlackTree.Node.BLACK;
+//        System.out.println(rbt.root);           // This helps to figure out the tree structure
+//        System.out.println(rbt);
+    	RedBlackTree rbt = new RedBlackTree();
+        rbt.insert(7);
+        rbt.insert(3);
+        rbt.insert(18);
+        rbt.insert(10);
+        rbt.insert(22);
+        rbt.insert(8);
+        rbt.insert(11);
+        rbt.insert(26);
+        
+        rbt.insert(15);
 
         assert rbt.root.colour == RedBlackTree.Node.BLACK;
         System.out.println(rbt.root);           // This helps to figure out the tree structure
@@ -204,6 +253,7 @@ public class RedBlackTree {
         public Boolean isBLACK() {
         	return this.colour;
         }
+        
 
         /**
          * Print the tree node: red node wrapped by "<>"; black node by "[]"
@@ -212,7 +262,7 @@ public class RedBlackTree {
         @Override public String toString() {
             if (value == null)
                 return "";
-            return (color == RED) ? "<" + value + ">" : "[" + value + "]";
+            return (colour == RED) ? "<" + value + ">" : "[" + value + "]";
         }
     }
 
