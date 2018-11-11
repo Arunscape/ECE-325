@@ -74,68 +74,38 @@ public class RedBlackTree {
 			insertCase1(n);
 		} else if (n.parent.isBLACK()) {
 			insertCase2(n);
-		} else if (n.uncle().isRED()) {
+		} else if (n.parent.isRED() && n.uncle().isRED()) {
 			insertCase3(n);
-		} else {
+		} else if (n.parent.isRED() && n.uncle().isBLACK()) {
 			insertCase4(n);
 		}
 
 	}
 
 	public void insertCase1(Node n) {
-		// the current node is the root of the tree
-		// recolour it black to satisfy property 2 (the root is black)
-		// Since this adds one black node to every path at once, property 5
-		// (all paths from any given node to its leaf nodes contain the same number of
-		// black nodes)
-		// is not violated.
+		
 		if (n == this.root)
 			this.colourBlack(n);
 	}
 
 	public void insertCase2(Node n) {
-		// the current node's parent P is black, so property 4
-		// (both children of every red node are black) is not invalidated
-		// Property 5 (all paths from any given node to its leaf nodes contain the same
-		// number of black nodes)
-		// is not threatened, because the current node N has two black leaf children,
-		// but because n is red, the paths through each of its children have the same
-		// number of black nodes as the path
-		// through the leaf it replaced, which was black, and so this property remains
-		// satisfied.
-		
-		; // nothing to do lmao
+		// noop
 	}
 
 	public void insertCase3(Node n) {
-		// if both the parent P and the uncle U are red,
-		// then both of them can be recoloured black and the grandparent
-		// becomes red to maintain property 5 (all paths from any given node to its leaf
-		// nodes contain the same number of black nodes).
-		// Since any path through the parent or uncle must pass through the grandparent,
-		// the number of black nodes on these paths has not changed.
-		// However, the grandparent G may now violate Property 2 (The root is black)
-		// if it is the root or Property 4 (Both children of every red node are black)
-		// if it has a red parent.
-		// To fix this, the tree's red-black repair procedure is rerun on G.
+		
 		this.colourBlack(n.parent, n.uncle());
 		this.colourRed(n.parent.parent);
 		this.fixRedBlackProperties(n.parent.parent);
-	}
-
-	public void insertCase4(Node n) {
-		
-		if (n == n.parent.right)
 	}
 	
 	public void insertCase4(Node n) {
 
 		if (n == n.parent.parent.left.right) {
-			this.rotateLeft(n.parent);
+			this.rotateRight(n.parent);
 			n = n.left;
 		} else if (n == n.parent.parent.right.left) {
-			this.rotateRight(n.parent);
-			;
+			this.rotateLeft(n.parent);
 			n = n.right;
 		}
 
@@ -144,13 +114,14 @@ public class RedBlackTree {
 
 	public void insertCase4Step2(Node n) {
 	
-		if (n == n.parent.left) {
-			this.rotateRight(n.parent.parent);
-		} else {
-			this.rotateLeft(n.parent.parent);
-		}
 		this.colourBlack(n.parent);
 		this.colourRed(n.parent.parent);
+		
+		if (n == n.parent.left) {
+			this.rotateRight(n.parent.parent);
+		} else if (n == n.parent.right) {
+			this.rotateLeft(n.parent.parent);
+		}
 	}
 
 	public void colourBlack(Node... nodes) {
@@ -336,7 +307,9 @@ public class RedBlackTree {
 		}
 
 		public Node uncle() {
-			return this == this.parent.left ? this.parent.right : this.parent.left;
+			return this.parent.parent.left == this.parent 
+					? this.parent.parent.right
+							: this.parent.parent.left;
 		}
 
 		/**
