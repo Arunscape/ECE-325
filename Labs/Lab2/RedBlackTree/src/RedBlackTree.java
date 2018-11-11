@@ -232,7 +232,23 @@ public class RedBlackTree {
 			System.out.println();
 		}
 	}
+	
+	
+	public void InorderGraphViz(Node root, int level) {
+        if(root != null) {
+            System.out.println(root.value);
+            if(root.left != null){
+                System.out.print("" + root.value + "->");
+            }
+            InorderGraphViz(root.left, level+1);
 
+            if(root.right != null){
+                System.out.print("" + root.value + "->");
+            }
+            InorderGraphViz(root.right, level+1);
+        }
+    }
+	
 	/**
 	 * Main entry
 	 * 
@@ -246,6 +262,8 @@ public class RedBlackTree {
         assert rbt.root.colour == RedBlackTree.Node.BLACK;
         System.out.println(rbt.root);           // This helps to figure out the tree structure
         System.out.println(rbt);
+//        rbt.InorderGraphViz(rbt.root, 5);
+        
 
 //		RedBlackTree rbt = new RedBlackTree();
 //		rbt.insert(7);
@@ -266,6 +284,7 @@ public class RedBlackTree {
 //		rbt.printBreadthFirstSearch();
 //		rbt.insert(15);
 //		rbt.printBreadthFirstSearch();
+//		rbt.Inorder(rbt.root, 5);
 
 //		rbt.rotateRight(rbt.root.right);
 ////        rbt.rotateRight(rbt.root.right);
