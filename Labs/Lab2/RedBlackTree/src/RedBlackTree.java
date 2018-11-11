@@ -102,10 +102,10 @@ public class RedBlackTree {
 	public void insertCase4(Node n) {
 
 		if (n == n.parent.parent.left.right) {
-			this.rotateRight(n.parent);
+			this.rotateLeft(n.parent);
 			n = n.left;
 		} else if (n == n.parent.parent.right.left) {
-			this.rotateLeft(n.parent);
+			this.rotateRight(n.parent);
 			n = n.right;
 		}
 
@@ -239,33 +239,33 @@ public class RedBlackTree {
 	 * @param args {@code String[]} Command line arguments
 	 */
 	public static void main(String[] args) {
-//        RedBlackTree rbt = new RedBlackTree();
-//        for (int i = 0; i < 10; i++)
-//            rbt.insert((int) (Math.random() * 200));
-//
-//        assert rbt.root.colour == RedBlackTree.Node.BLACK;
-//        System.out.println(rbt.root);           // This helps to figure out the tree structure
-//        System.out.println(rbt);
+        RedBlackTree rbt = new RedBlackTree();
+        for (int i = 0; i < 10; i++)
+            rbt.insert((int) (Math.random() * 200));
 
-		RedBlackTree rbt = new RedBlackTree();
-		rbt.insert(7);
-		rbt.printBreadthFirstSearch();
-		rbt.insert(3);
-		rbt.printBreadthFirstSearch();
-		rbt.insert(18);
-		rbt.printBreadthFirstSearch();
-		rbt.insert(10);
-		rbt.printBreadthFirstSearch();
-		rbt.insert(22);
-		rbt.printBreadthFirstSearch();
-		rbt.insert(8);
-		rbt.printBreadthFirstSearch();
-		rbt.insert(11);
-		rbt.printBreadthFirstSearch();
-		rbt.insert(26);
-		rbt.printBreadthFirstSearch();
-		rbt.insert(15);
-		rbt.printBreadthFirstSearch();
+        assert rbt.root.colour == RedBlackTree.Node.BLACK;
+        System.out.println(rbt.root);           // This helps to figure out the tree structure
+        System.out.println(rbt);
+
+//		RedBlackTree rbt = new RedBlackTree();
+//		rbt.insert(7);
+//		rbt.printBreadthFirstSearch();
+//		rbt.insert(3);
+//		rbt.printBreadthFirstSearch();
+//		rbt.insert(18);
+//		rbt.printBreadthFirstSearch();
+//		rbt.insert(10);
+//		rbt.printBreadthFirstSearch();
+//		rbt.insert(22);
+//		rbt.printBreadthFirstSearch();
+//		rbt.insert(8);
+//		rbt.printBreadthFirstSearch();
+//		rbt.insert(11);
+//		rbt.printBreadthFirstSearch();
+//		rbt.insert(26);
+//		rbt.printBreadthFirstSearch();
+//		rbt.insert(15);
+//		rbt.printBreadthFirstSearch();
 
 //		rbt.rotateRight(rbt.root.right);
 ////        rbt.rotateRight(rbt.root.right);
