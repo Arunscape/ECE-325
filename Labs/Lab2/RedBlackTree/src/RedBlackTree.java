@@ -262,7 +262,8 @@ public class RedBlackTree {
         assert rbt.root.colour == RedBlackTree.Node.BLACK;
         System.out.println(rbt.root);           // This helps to figure out the tree structure
         System.out.println(rbt);
-//        rbt.InorderGraphViz(rbt.root, 5);
+        rbt.InorderGraphViz(rbt.root, 5);
+        rbt.printBreadthFirstSearch();
         
 
 //		RedBlackTree rbt = new RedBlackTree();
