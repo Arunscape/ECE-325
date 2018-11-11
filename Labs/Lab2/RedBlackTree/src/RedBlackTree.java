@@ -40,29 +40,38 @@ public class RedBlackTree {
     	
     	//BST Insert
     	Node x = new Node(value);
+    	Node y;
     	this.colourRed(x);
     	
     	bstInsert(x);
     	
-    	
-    	Node y = null;
-    	
-    	
-    	
-//    	Node x = recursiveInsert(this.root, value);
-//    	Node y = x.parent.parent.right;
-//    	
 //    	while (x != this.root && x.isRED()) {
 //    		if(x.parent == x.parent.parent.left) {
-//    			if(y.isRED()) {
-//    				x = this.case1(x,y);
+//    			y = x.parent.parent.right;
+//    			if (y.isRED()) {
+//    				this.case1(x, y);
 //    			}
 //    			else if (x == x.parent.right) {
-//    				this.case2(x,y);
+//    				this.case2(x, y);
 //    			}
-//    			this.case3(x,y);
+//    			this.case3(x, y);
+//    		}
+//    		else {
+//    			//same thing but switch left and right
+//    			y = x.parent.parent.right;
+//    			if (y.isRED()) {
+//    				this.case4(x,y);
+//    			}
+//    			else if (x == x.parent.left) {
+//    				this.case5(x,y);
+//    			}
+//    			this.case3(x, y);
 //    		}
 //    	}
+//    	this.colourBlack(this.root);    	
+    	
+    	//test rotation
+    	
     	this.size++;
     }
     
@@ -108,6 +117,22 @@ public class RedBlackTree {
     	return null;
     }
     
+    private Node case4(Node x, Node y) {
+    	System.out.println("Case4");
+    	
+    	this.colourBlack(x.parent, y);
+    	this.colourRed(x.parent.parent);
+    	return x.parent.parent;
+    }
+    
+    private Node case5(Node x, Node y) {
+    	System.out.println("Case 5");
+    	
+    	this.rotateLeft(x.parent);
+    	
+    	return null;
+    }
+    
     public void colourBlack(Node ...nodes) {
     	for (Node n: nodes)
     		n.colour = BLACK;
@@ -118,50 +143,58 @@ public class RedBlackTree {
     		n.colour = RED;
     }
     
-    public void rotateLeft(Node p) {
+    public void rotateLeft(Node n) {
     	
-    	Node n = p.right;
-    	
-    	if (p == this.root) {
-    		this.root = n;
+    	if (n.right.isNil()) {
+    		return;
     	}
     	
-    	p.right = n.left;
-    	n.left.parent = p;
+    	Node oldRight = n.right;
     	
-    	commonRotateOperations(n,p);
-    	n.left = p;
-    	p.parent = n;
+    	n.right = oldRight.left;
     	
+    	if (!oldRight.left.isNil()) {
+    		oldRight.left.parent = n;
+    	}
+    	oldRight.parent = n.parent;
+    	if (n == this.root) {
+    		this.root = oldRight;
+    	}
+    	else if (n == n.parent.left) {
+    		n.parent.left = oldRight;
+    	}
+    	else {
+    		n.parent.right = oldRight;
+    	}
+    	oldRight.left = n;
+    	n.parent = oldRight;
     }
     
-    public void rotateRight(Node p) {
+public void rotateRight(Node n) {
     	
-    	Node n = p.left;
-    	
-    	if (p == this.root) {
-    		this.root = n;
+    	if (n.left.isNil()) {
+    		return;
     	}
     	
-    	p.left = n.right;
-    	n.right.parent = p;
+    	Node oldLeft = n.left;
     	
-    	commonRotateOperations(n, p);
-    	n.right = p;
-    	p.parent=n;
+    	n.left = oldLeft.right;
     	
-    }
-
-    public void commonRotateOperations(Node n, Node p) {
-    	n.parent = p.parent;
-    	p.parent.left = n;
-    	
-    	if (p == p.parent.left) {
-    		p.parent.left=n;
+    	if (!oldLeft.right.isNil()) {
+    		oldLeft.right.parent = n;
     	}
-    	else if (p == p.parent.right) {
-    		p.parent.right=n;
+    	oldLeft.parent = n.parent;
+    	if (n == this.root) {
+    		this.root = oldLeft;
     	}
+    	else if (n == n.parent.right) {
+    		n.parent.right = oldLeft;
+    	}
+    	else {
+    		n.parent.left = oldLeft;
+    	}
+    	oldLeft.right = n;
+    	n.parent = oldLeft;
     }
 
     /**
@@ -173,16 +206,13 @@ public class RedBlackTree {
     }
 
     
-    public String inOrder(Node root, String tree){
-    	
-    	if (root == null) {
-    		return "";
+    public String inOrder(Node root) {
+    	   return
+    	      (root.left == null ? "" : inOrder(root.left) )+
+    	       root + " " +
+    	      (root.right == null ? "" : inOrder(root.right) );
     	}
-        inOrder(root.left, tree);
-        tree += root.value + " ";
-        inOrder(root.right, tree );
-        return tree;
-    }
+    
     /**
      * Cast the tree into a string
      * @return          {@code String} Printed format of the tree
@@ -191,8 +221,30 @@ public class RedBlackTree {
     public String toString() {
         // TODO: Lab 2 Part 2-3 -- print the tree, where each node contains both value and color
         // You can print it by in-order traversal
-    	
-        return this.inOrder(this.root, "");
+
+        return this.inOrder(this.root);
+    }
+    
+    void printGivenLevel(Node root, int level) 
+    { 
+        if (root == null) 
+            return; 
+        if (level == 1) 
+            System.out.print(root); 
+        else if (level > 1) 
+        { 
+            printGivenLevel(root.left, level-1); 
+            printGivenLevel(root.right, level-1); 
+        } 
+    } 
+    
+    void printBreadthFirstSearch() {
+    	System.out.println("Breadth first search");
+        for (int i=1; i<=5; i++) 
+        { 
+            this.printGivenLevel(this.root, i); 
+            System.out.println(); 
+        } 
     }
 
     /**
@@ -218,10 +270,13 @@ public class RedBlackTree {
         rbt.insert(26);
         
         rbt.insert(15);
-
-        assert rbt.root.colour == RedBlackTree.Node.BLACK;
-        System.out.println(rbt.root);           // This helps to figure out the tree structure
-        System.out.println(rbt);
+        
+        rbt.printBreadthFirstSearch();
+        
+        rbt.rotateRight(rbt.root.right);
+//        rbt.rotateRight(rbt.root.right);
+        
+        rbt.printBreadthFirstSearch();
     }
 
 
@@ -254,6 +309,9 @@ public class RedBlackTree {
         	return this.colour;
         }
         
+        public Boolean isNil() {
+        	return this.value == null;
+        }
 
         /**
          * Print the tree node: red node wrapped by "<>"; black node by "[]"
