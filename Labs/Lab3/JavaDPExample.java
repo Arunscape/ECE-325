@@ -1,3 +1,38 @@
+/*DISCUSSION:
+1.
+Why do we use a static method in this 
+situation?
+
+- we can call this method without the need to instantiate an object
+- it wouldn't make sense to do something like 
+		mouse.getAnimal("Big")
+	and have the function output "Bison"
+2.
+The code implements a class-level (involving multiple classes) programming "good practice", commonly 
+these practices are called design patterns in Java. Which design pattern is implemented?
+
+- the dependency inversion principle -- the low level classes (Mouse, Bison, Lion)
+are based on the abstraction layer Animal, which the high level getAnimal class uses
+
+
+3.
+Explain why this is considered a good practice.
+
+- Since the high level modules contain the complex logic they should not depend on the
+ low level modules, which saves headaches when the a low level module needs to
+ be modified. Doing it this way, you only have to change the low level module, whereas
+ if you didn't, changing a low level module would make you also have to change the
+ abstraction layer. The abstraction layer shouldn't change unless there is a specification
+ change, so that's nice.
+
+
+
+
+
+
+
+
+*/
 /**
  * Lab 3: Inheritance, Interfaces, Hash, Design Pattern and Big Number <br />
  * The {@code Animal} interface
