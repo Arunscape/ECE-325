@@ -1,3 +1,5 @@
+//NOTE: this is still a work in progress
+
 import java.util.ArrayList;
 
 /**
@@ -47,18 +49,7 @@ public class GenericHeap<K extends Comparable<K>, V> {
 	 */
 	public void insert(K key, V value) {
 		// TODO: Lab 4 Part 2-1 -- GenericHeap, add new element
-		this.heap.add(new Pair<K, V>(key, value));
-
-		// fix the heap
-		this.buildMaxHeap();
-		
-		int endHeapIdx = this.heap.size() - 1;
-		
-		while(endHeapIdx>0) {
-            swap(0, endHeapIdx);
-            maxHeapify(0,endHeapIdx--);  // endHeapIdx is actually the heap's size before it is decremented
-}
-		
+		this.heap.add(new Pair<K, V>(key, value));	
 
 	}
 
@@ -88,7 +79,7 @@ public class GenericHeap<K extends Comparable<K>, V> {
 		// if parent isn't the largest, then we need to swap it with the largest one,
 		// then check
 		// if the old root, now child holds the max heap property, and if not, fix it!
-		int leftIdx = this.leftChildIndex(i, heapSize);
+		int leftIdx= this.leftChildIndex(i, heapSize);
 		int rightIdx = this.rightChildIndex(i, heapSize);
 
 		Pair<K, V> leftVal = (Pair<K, V>) (leftIdx != -1 ? this.heap.get(leftIdx) : null);
@@ -97,10 +88,10 @@ public class GenericHeap<K extends Comparable<K>, V> {
 		// max val is the parent for now
 		int indexOfMaxVal = i;
 
-		if (this.heap.get(indexOfMaxVal).compareTo(leftVal) < -1) {
+		if (this.heap.get(indexOfMaxVal).compareTo(leftVal) < 0) {
 			indexOfMaxVal = leftIdx;
 		}
-		if (this.heap.get(indexOfMaxVal).compareTo(rightVal) < -1) {
+		if (this.heap.get(indexOfMaxVal).compareTo(rightVal) < 0) {
 			indexOfMaxVal = rightIdx;
 		}
 		if (indexOfMaxVal == i) {
@@ -136,6 +127,16 @@ public class GenericHeap<K extends Comparable<K>, V> {
 		for (E e : array)
 			bleh.insert(e, e);
 		System.out.println(bleh.heap);
+		
+		// fix the heap
+		bleh.buildMaxHeap();
+		
+		int endHeapIdx = bleh.heap.size() - 1;
+		
+		while(endHeapIdx>0) {
+            bleh.swap(0, endHeapIdx);
+            bleh.maxHeapify(0,endHeapIdx--);  // endHeapIdx is actually the heap's size before it is decremented
+}
 
 //    	for (Pair p: bleh.heap) {
 //    		//can't do this because the method is static 🙄

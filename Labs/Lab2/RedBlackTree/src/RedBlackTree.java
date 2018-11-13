@@ -28,7 +28,18 @@ public class RedBlackTree {
 	 */
 	public boolean contains(int value) {
 		// TODO: Lab 2 Part 2-1 -- find an integer from the tree
-
+		Node n = this.root;
+		while (!n.isNil()) {
+			if ( value < n.value) {
+				n = n.left;
+			}
+			else if (value > n.value) {
+				n = n.right;
+			}
+			else if (n.value == value) {
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -265,7 +276,17 @@ public class RedBlackTree {
 //        rbt.InorderGraphViz(rbt.root, 5);
 //        rbt.printBreadthFirstSearch();
         
-
+        System.out.println(rbt.contains(190));
+        System.out.println(rbt.contains(191));
+        System.out.println(rbt.contains(192));
+        System.out.println(rbt.contains(193));
+        System.out.println(rbt.contains(194));
+        System.out.println(rbt.contains(195));
+        System.out.println(rbt.contains(196));
+        System.out.println(rbt.contains(197));
+        System.out.println(rbt.contains(198));
+        System.out.println(rbt.contains(199));
+        
 //		RedBlackTree rbt = new RedBlackTree();
 //		rbt.insert(7);
 //		rbt.printBreadthFirstSearch();
