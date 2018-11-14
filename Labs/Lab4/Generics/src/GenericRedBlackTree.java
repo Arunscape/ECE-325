@@ -45,13 +45,16 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	public Node findNode(K key) {
 
 		Node n = this.root;
-		while (!n.isNil()) {
+		while (n!= null && !n.isNil()) {
 			if (key.compareTo(n.key) < -0) {
 				n = n.left;
 			} else if (key.compareTo(n.key) > 0) {
 				n = n.right;
-			} else if (n.key == key) {
+			} else if (n.key.equals(key)) {
 				return n;
+			}
+			else {
+				System.out.println("REEEEEE");
 			}
 		}
 		return null;
@@ -220,6 +223,62 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	 * @param key {@code K} the key of the element
 	 * @return {@code V} the value of the removed element
 	 */
+//	public V remove(K key) {
+//		// TODO: Lab 4 Part 3-3 -- remove an element from the tree
+//
+//		Node n = this.findNode(key);
+//		if (n == null) {
+//			return null;
+//		}
+//		
+//		if (n.left != null && n.right != null && !n.left.isNil() && !n.right.isNil()) {
+//			Node nextLarger = this.nextLarger(n);
+//			
+//			this.swapNodes(n, nextLarger);
+//			n = nextLarger;
+//		}
+//
+//		size--;
+//		
+//		Node child;
+//		
+//		if ( n.left != null && !n.left.isNil()) {
+//			child = n.left;
+//		}
+//		else {
+//			child = n.right;
+//		}
+//		
+//		if (n != this.root) {
+//			child.parent = n.parent;
+//			
+//			if ( n == n.parent.left) {
+//				n.parent.left = child;
+//			}
+//			else {
+//				n.parent.right = child;
+//			}
+//		}
+//		else if ( child == null || child.isNil()) {
+//			root = null;
+//		}
+//		else {
+//			root = child;
+//			child.parent = null;
+//		}
+//		
+//		if (n.isBLACK()) {
+//			if ( child.isRED()) {
+//				this.colourBlack(child);
+//			}
+//			else {
+//				fixDelColour(n);
+//			}
+//		}
+//
+//		return n.value;
+//	}
+	
 	public V remove(K key) {
 		// TODO: Lab 4 Part 3-3 -- remove an element from the tree
 
@@ -238,7 +297,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 
 		deleteAsBST(key);
 
-		return null;
+		return n.value;
 	}
 
 	public void deleteAsBST(K key) {
@@ -269,7 +328,12 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		
 		
 		return root;
+}
+	
+	public void fixDelColour(Node n) {
+		;
 	}
+
 
 	public Node nextLarger(Node n) {
 		// next larger node is the leftmost node in right child's subtree
@@ -325,7 +389,8 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	}
 
 	public String inOrder(Node root) {
-		return (root.left == null ? "" : inOrder(root.left)) + root + " "
+		return 
+			root == null? "":(root.left == null ? "" : inOrder(root.left)) + root + " "
 				+ (root.right == null ? "" : inOrder(root.right));
 	}
 
