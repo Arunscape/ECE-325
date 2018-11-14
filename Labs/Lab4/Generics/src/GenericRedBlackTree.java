@@ -4,54 +4,68 @@ import RedBlackTree.Node;
  * Lab 4: Generics <br />
  * The {@code GenericRedBlackTree} class <br />
  * Reference: <a href="https://en.wikipedia.org/wiki/Red%E2%80%93black_tree">
- *              https://en.wikipedia.org/wiki/Red%E2%80%93black_tree
- *            </a>
+ * https://en.wikipedia.org/wiki/Red%E2%80%93black_tree </a>
  */
 public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	public static final boolean BLACK = true;
 	public static final boolean RED = false;
 
-    /**
-     * Root node of the red black tree
-     */
-    private Node root = null;
+	/**
+	 * Root node of the red black tree
+	 */
+	private Node root = null;
 
-    /**
-     * Size of the tree
-     */
-    private int size = 0;
+	/**
+	 * Size of the tree
+	 */
+	private int size = 0;
 
-    /**
-     * Search for the node by key, and return the corresponding value
-     * @param key       {@code K} the key for searching
-     * @return          {@code V} the value of the node, or {@code NULL} if not found
-     */
-    public V find(K key) {
-        // TODO: Lab 4 Part 3-1 -- find an element from the tree
+	/**
+	 * Search for the node by key, and return the corresponding value
+	 * 
+	 * @param key {@code K} the key for searching
+	 * @return {@code V} the value of the node, or {@code NULL} if not found
+	 */
+	public V find(K key) {
+		// TODO: Lab 4 Part 3-1 -- find an element from the tree
 
-    	Node n = this.root;
+		Node n = this.root;
 		while (!n.isNil()) {
 			if (key.compareTo(n.key) < -0) {
 				n = n.left;
-			}
-			else if (key.compareTo(n.key) > 0) {
+			} else if (key.compareTo(n.key) > 0) {
 				n = n.right;
-			}
-			else if (n.key == key) {
+			} else if (n.key == key) {
 				return n.value;
 			}
 		}
 		return null;
-    }
+	}
 
-    /**
-     * Insert an element to the tree
-     * @param key       {@code K} the key of the new element
-     * @param value     {@code V} the value of the new element
-     */
-    public void insert(K key, V value) {
-        // TODO: Lab 4 Part 3-2 -- insert an element into the tree
-    	this.size++;
+	public Node findNode(K key) {
+
+		Node n = this.root;
+		while (!n.isNil()) {
+			if (key.compareTo(n.key) < -0) {
+				n = n.left;
+			} else if (key.compareTo(n.key) > 0) {
+				n = n.right;
+			} else if (n.key == key) {
+				return n;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Insert an element to the tree
+	 * 
+	 * @param key   {@code K} the key of the new element
+	 * @param value {@code V} the value of the new element
+	 */
+	public void insert(K key, V value) {
+		// TODO: Lab 4 Part 3-2 -- insert an element into the tree
+		this.size++;
 		// BST Insert
 
 		Node x = new Node(key, value);
@@ -60,9 +74,9 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		bstInsert(x);
 
 		fixRedBlackProperties(x);
-    }
-    
-    public void bstInsert(Node n) {
+	}
+
+	public void bstInsert(Node n) {
 		this.root = recursiveInsert(this.root, n);
 	}
 
@@ -95,7 +109,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	}
 
 	public void insertCase1(Node n) {
-		
+
 		if (n == this.root)
 			this.colourBlack(n);
 	}
@@ -105,12 +119,12 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	}
 
 	public void insertCase3(Node n) {
-		
+
 		this.colourBlack(n.parent, n.uncle());
 		this.colourRed(n.parent.parent);
 		this.fixRedBlackProperties(n.parent.parent);
 	}
-	
+
 	public void insertCase4(Node n) {
 
 		if (n == n.parent.parent.left.right) {
@@ -125,10 +139,10 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	}
 
 	public void insertCase4Step2(Node n) {
-	
+
 		this.colourBlack(n.parent);
 		this.colourRed(n.parent.parent);
-		
+
 		if (n == n.parent.left) {
 			this.rotateRight(n.parent.parent);
 		} else if (n == n.parent.right) {
@@ -200,26 +214,98 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		n.parent = oldLeft;
 	}
 
-    /**
-     * Remove an element from the tree
-     * @param key       {@code K} the key of the element
-     * @return          {@code V} the value of the removed element
-     */
-    public V remove(K key) {
-        // TODO: Lab 4 Part 3-3 -- remove an element from the tree
-        
-        return null;
-    }
+	/**
+	 * Remove an element from the tree
+	 * 
+	 * @param key {@code K} the key of the element
+	 * @return {@code V} the value of the removed element
+	 */
+	public V remove(K key) {
+		// TODO: Lab 4 Part 3-3 -- remove an element from the tree
 
-    /**
-     * Get the size of the tree
-     * @return          {@code int} size of the tree
-     */
-    public int size() {
-        return size;
-    }
-    
-    void printGivenLevel(Node root, int level) {
+		Node n = this.findNode(key);
+		if (n == null) {
+			return null;
+		}
+
+		size--;
+		if (n.left == null && n.right == null) {
+			n.key = null;
+			n.value = null;
+			this.colourBlack(n);
+			return null;
+		}
+
+		deleteAsBST(key);
+
+		return null;
+	}
+
+	public void deleteAsBST(K key) {
+
+		this.root = recursiveDelete(this.root, key);
+
+	}
+
+	public Node recursiveDelete(Node root, K key) {
+		if (root == null || root.isNil()) {
+			return null;
+		}
+
+		if (key.compareTo(root.key) < 0) {
+			root.left = recursiveDelete(root.left, key);
+		} else if (key.compareTo(root.key) > 0) {
+			root.right = recursiveDelete(root.right, key);
+		}
+
+		else if (root.left != null && root.right !=null && !root.left.isNil() && !root.right.isNil()) {
+			root.key = nextLarger(root).key;
+			root.right = recursiveDelete(root.right, root.key);
+		}
+		else {
+			root = root.left != null && !root.left.isNil()?
+					root.left : root.right;
+		}
+		
+		
+		return root;
+	}
+
+	public Node nextLarger(Node n) {
+		// next larger node is the leftmost node in right child's subtree
+		Node nextLarger = n.right;
+
+		if (n.right == null || n.right.isNil()) {
+			return n;
+		}
+		while (!nextLarger.isNil()) {
+			nextLarger = nextLarger.left;
+		}
+		return nextLarger.parent;
+
+	}
+
+	public void swapNodes(Node x, Node y) {
+		K k = x.key;
+		V v = x.value;
+
+		x.key = y.key;
+		x.value = y.value;
+
+		y.key = k;
+		y.value = v;
+	}
+
+	/**
+	 * Get the size of the tree
+	 * 
+	 * @return {@code int} size of the tree
+	 */
+	public int size() {
+		return size;
+	}
+
+	void printGivenLevel(Node root, int level) {
 		if (root == null)
 			return;
 		if (level == 1)
@@ -237,81 +323,84 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 			System.out.println();
 		}
 	}
-    
-    public String inOrder(Node root) {
+
+	public String inOrder(Node root) {
 		return (root.left == null ? "" : inOrder(root.left)) + root + " "
 				+ (root.right == null ? "" : inOrder(root.right));
 	}
 
-    /**
-     * Cast the tree into a string
-     * @return          {@code String} Printed format of the tree
-     */
-    @Override public String toString() {
-        // TODO: Lab 4 Part 3-4 -- print the tree, where each node contains both value and color
-        // You can print it by in-order traversal
+	/**
+	 * Cast the tree into a string
+	 * 
+	 * @return {@code String} Printed format of the tree
+	 */
+	@Override
+	public String toString() {
+		// TODO: Lab 4 Part 3-4 -- print the tree, where each node contains both value
+		// and color
+		// You can print it by in-order traversal
 
-    	return this.inOrder(this.root);
-    }
+		return this.inOrder(this.root);
+	}
 
-    /**
-     * Main entry
-     * @param args      {@code String[]} Command line arguments
-     */
-    public static void main(String[] args) {
-        GenericRedBlackTree<Integer, String> rbt = new GenericRedBlackTree<Integer, String>();
-        int[] keys = new int[10];
-        for (int i = 0; i < 10; i++) {
-            keys[i] = (int) (Math.random() * 200);
-            System.out.println(String.format("%2d Insert: %-3d ", i+1, keys[i]));
-            rbt.insert(keys[i], "\"" + keys[i] + "\"");
-        } // for (int i = 0; i < 10; i++)
+	/**
+	 * Main entry
+	 * 
+	 * @param args {@code String[]} Command line arguments
+	 */
+	public static void main(String[] args) {
+		GenericRedBlackTree<Integer, String> rbt = new GenericRedBlackTree<Integer, String>();
+		int[] keys = new int[10];
+		for (int i = 0; i < 10; i++) {
+			keys[i] = (int) (Math.random() * 200);
+			System.out.println(String.format("%2d Insert: %-3d ", i + 1, keys[i]));
+			rbt.insert(keys[i], "\"" + keys[i] + "\"");
+		} // for (int i = 0; i < 10; i++)
 
-        assert rbt.root.colour == GenericRedBlackTree.Node.BLACK;
-        System.out.println(rbt.root);                   // This helps to figure out the tree structure
-        System.out.println(rbt);
-        
-        
-        System.out.println();
-        System.out.println();
-        rbt.printBreadthFirstSearch();
-        System.out.println();
-        System.out.println();
-        
-        
-        for (int i = 0; i < 10; i++) {
-            System.out.println(String.format("%2d Delete: %3d(%s)", i+1, keys[i], rbt.remove(keys[i])));
-            if ((i + 1) % 5 == 0) {
-                System.out.println(rbt);
-            } // if ((i + 1) % 5 == 0)
-        } // for (int i = 0; i < 10; i++)
-}
+		assert rbt.root.colour == GenericRedBlackTree.Node.BLACK;
+		System.out.println(rbt.root); // This helps to figure out the tree structure
+		System.out.println(rbt);
 
+		System.out.println();
+		System.out.println();
+		rbt.printBreadthFirstSearch();
+		System.out.println();
+		System.out.println();
 
-    /**
-     * The {@code Node} class for {@code GenericRedBlackTree}
-     */
-    private class Node {
-        public static final boolean BLACK = true;
-        public static final boolean RED = false;
+		for (int i = 0; i < 10; i++) {
+			System.out.println(String.format("%2d Delete: %3d(%s)", i + 1, keys[i], rbt.remove(keys[i])));
+			rbt.printBreadthFirstSearch();
+			if ((i + 1) % 5 == 0) {
+				System.out.println(rbt);
+			} // if ((i + 1) % 5 == 0)
+		} // for (int i = 0; i < 10; i++)
 
-        public K key;
-        public V value;
-        public boolean colour = BLACK;
-        public Node parent = null, left = null, right = null;
+	}
 
-        public Node(K key, V value) {                   // By default, a new node is black with two NIL children
-            this.key = key;
-        	this.value = value;
-            if (value != null) {
-                left = new Node(null, null);          // And the NIL children are both black
-                left.parent = this;
-                right = new Node(null, null);
-                right.parent = this;
-            }
-        }
-        
-        public Boolean isRED() {
+	/**
+	 * The {@code Node} class for {@code GenericRedBlackTree}
+	 */
+	private class Node {
+		public static final boolean BLACK = true;
+		public static final boolean RED = false;
+
+		public K key;
+		public V value;
+		public boolean colour = BLACK;
+		public Node parent = null, left = null, right = null;
+
+		public Node(K key, V value) { // By default, a new node is black with two NIL children
+			this.key = key;
+			this.value = value;
+			if (value != null) {
+				left = new Node(null, null); // And the NIL children are both black
+				left.parent = this;
+				right = new Node(null, null);
+				right.parent = this;
+			}
+		}
+
+		public Boolean isRED() {
 			return !this.colour;
 		}
 
@@ -320,24 +409,28 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		}
 
 		public Boolean isNil() {
-			return this.value == null;
+			return this.value == null || this.key == null;
 		}
 
 		public Node uncle() {
-			return this.parent.parent.left == this.parent 
-					? this.parent.parent.right
-							: this.parent.parent.left;
+			return this.parent.parent.left == this.parent ? this.parent.parent.right : this.parent.parent.left;
 		}
 
-        /**
-         * Print the tree node: red node wrapped by "<>"; black node by "[]"
-         * @return          {@code String} The printed string of the tree node
-         */
-        @Override public String toString() {
-            if (value == null)
-                return "";
-            return (colour == RED) ? "<" + value + "(" + key + ")>" : "[" + value + "(" + key + ")]";
-        }
-    }
+		public Node sibling() {
+			return this.parent.left == this ? this.parent.right : this.parent.left;
+		}
+
+		/**
+		 * Print the tree node: red node wrapped by "<>"; black node by "[]"
+		 * 
+		 * @return {@code String} The printed string of the tree node
+		 */
+		@Override
+		public String toString() {
+			if (value == null)
+				return "";
+			return (colour == RED) ? "<" + value + "(" + key + ")>" : "[" + value + "(" + key + ")]";
+		}
+	}
 
 }
