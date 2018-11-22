@@ -3,7 +3,7 @@ import java.util.Date;
 
 public class Main {
 	
-	public BigInteger fnv(byte[] data, int length) {
+	public BigInteger fnv(BigInteger[] data, int length) {
 		BigInteger h = new BigInteger("14695981039346656037");
 		
 		for (int i=0; i< length; i++) {
