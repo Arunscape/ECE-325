@@ -26,5 +26,9 @@ public class Rectangle implements TwoDShape<Rectangle> {
 	public Rectangle supersize() {
 		return new Rectangle(this.width * 2, this.height * 2);
 	}
+	
+//	public Circle supersize() {
+//		return new Circle(100);
+//	} // yay this errors out
 
 }
