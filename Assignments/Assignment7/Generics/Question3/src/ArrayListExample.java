@@ -10,7 +10,7 @@ public class ArrayListExample {
 
 // TODO: Assignment 7 Part 2 -- define the following four methods. No casts allowed!
 
-	public static <T extends TwoDShape> double total_area(ArrayList<T> a) {
+	public static <T extends TwoDShape<T>> double total_area(ArrayList<T> a) {
 		double r = 0;
 		for (T t : a)
 			r += t.area();
@@ -33,7 +33,7 @@ public class ArrayListExample {
 	 * "{@code describe}" method on each of them, then prints out the total number
 	 * of shapes
 	 */
-	public static <T extends GeometricShape> void describe_all(ArrayList<T> a) {
+	public static <T extends GeometricShape<T>> void describe_all(ArrayList<T> a) {
 		for (T t : a) {
 			t.describe();
 			System.out.println();
@@ -49,6 +49,7 @@ public class ArrayListExample {
 	 * {@code new Rectangle(0.0, 0.0);  } <br/>
 	 * {@code new Sphere(0.0);          }
 	 */
+	@SuppressWarnings("rawtypes")
 	public static void add_empties(ArrayList<GeometricShape> a) {
 		a.add(new Circle(0.0));
 		a.add(new Cone(0.0, 0.0));
@@ -81,9 +82,50 @@ public class ArrayListExample {
 	 * @param args {@code String[]} Command line arguments
 	 */
 	public static void main(String[] args) {
+		
+//		/* ================ Codes for Part 2 ================ */
+//		// Make a list of shapes, add a circle, a cone and some empty shapes, and then
+//		// describe all of the shapes
+//		System.out.println("Example with a list of shapes with a circle,  a cone, and some empty shapes");
+//		ArrayList<GeometricShape> shapes = new ArrayList<GeometricShape>();
+//		shapes.add(new Circle(1.0));
+//		shapes.add(new Cone(2.0, 3.0));
+//		add_empties(shapes);
+//		describe_all(shapes);
+//		// Make a list of rectangles, add some rectangles, describe them, and calculate
+//		// the total area and perimeter
+//		System.out.println();
+//		System.out.println("Example with a list of rectangles");
+//		ArrayList<Rectangle> rects = new ArrayList<Rectangle>();
+//		rects.add(new Rectangle(2.0, 3.0));
+//		rects.add(new Rectangle(5.0, 5.0));
+//		describe_all(rects);
+//		System.out.print("total area of rectangles: ");
+//		System.out.println(total_area(rects));
+//		System.out.print("total perimeter of rectangles: ");
+//		System.out.println(total_perimeter(rects));
+//		// Make a list of 2d shapes, add a rectangle and a circle, describe them and
+//		// calculate the total area.
+//		System.out.println();
+//		System.out.print("Example with a list of 2d shapes with a circle ");
+//		System.out.println("and a rectangle");
+//		ArrayList<TwoDShape> flat_shapes = new ArrayList<TwoDShape>();
+//		flat_shapes.add(new Rectangle(10.0, 10.0));
+//		flat_shapes.add(new Circle(2.0));
+//		describe_all(flat_shapes);
+//		System.out.print("total area of flat shapes: ");
+//		System.out.println(total_area(flat_shapes));
+//		// Make a list of spheres and describe them
+//		ArrayList<Sphere> spheres = new ArrayList<Sphere>();
+//		spheres.add(new Sphere(10.0));
+//		spheres.add(new Sphere(50.0));
+//		spheres.add(new Sphere(0.0));
+//		System.out.println();
+//		System.out.println("Example list of spheres");
+//		describe_all(spheres);
 
-		/* ================ Codes for Part 3 the difficult question ================ */
-
+//		/* ================ Codes for Part 3 the difficult question ================ */
+//
 		// Make a list of rectangles and add some rectangles.
 		ArrayList<Rectangle> rects = new ArrayList<Rectangle>();
 		rects.add(new Rectangle(2.0, 3.0));
