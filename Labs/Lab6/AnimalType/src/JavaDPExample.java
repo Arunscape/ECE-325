@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 /**
  * Lab 6: Anonymous Inner Classes and Reflection <br />
  * The {@code Animal} interface
@@ -58,15 +60,18 @@ class AnimalType {
      * @param criteria      {@code String} how is the animal like
      * @return              {@code Animal} the animal
      */
-    public static Animal getAnimal(String criteria) {
-        // TODO: Lab 6 Part 2-1 -- Refactor this method
-        if (criteria.equals("small"))
-            return new Mouse();
-        else if (criteria.equals("big"))
-            return new Bison();
-        else if (criteria.equals("lazy"))
-            return new Lion();
-        return null;
+	
+	public static final HashMap<String, Class<? extends Animal>> animalMap;
+	static{
+		animalMap = new HashMap<String, Class<? extends Animal>>();
+		animalMap.put("small", Mouse.class);
+    	animalMap.put("big", Bison.class);
+    	animalMap.put("lazy", Lion.class);
+	}
+	
+    public static Animal getAnimal(String criteria) throws InstantiationException, IllegalAccessException {
+        // TODO: Lab 6 Part -- Refactor this method
+        return AnimalType.animalMap.get(criteria).newInstance();
     }
 }
 
@@ -78,22 +83,31 @@ public class JavaDPExample {
     /**
      * Main entry
      * @param args          {@code String[]} Command line arguments
+     * @throws IllegalAccessException 
+     * @throws InstantiationException 
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InstantiationException, IllegalAccessException {
         AnimalType.getAnimal("small").speak();
         AnimalType.getAnimal("big").speak();
         AnimalType.getAnimal("lazy").speak();
 
         // TODO: Lab 6 Part 2-2 -- add an animal "Dog" here: criteria="loyal"; speak="woof"
+        class Dog implements Animal {
+        	@Override
+            public void speak() {
+                System.out.println("WOOF");
+            }
+        }
+     	AnimalType.animalMap.put("loyal", Dog.class);
         
         AnimalType.getAnimal("loyal").speak();
 
         // TODO: Lab 6 Part 2-3 -- remove the "small" animal here: Mouse
-
+        AnimalType.animalMap.remove("small");
         try {
             AnimalType.getAnimal("small").speak();
         } catch (Exception e) {
-            System.out.println("Unkwon animal...");
+            System.out.println("Unknown animal...");
         }
     }
 }
