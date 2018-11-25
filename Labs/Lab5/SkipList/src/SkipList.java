@@ -210,12 +210,12 @@ public class SkipList<K extends Comparable<K>, V> {
 
 		for (int i = this.level; i >= minlevel; i--) {
 			Node n = this.head;
-			if (n.forwards.get(i) != null) {
-				before = n.forwards.get(i);
-			}
-			while (n.forwards.get(i) != null && n.forwards.get(i).key.compareTo(key) > 0) {
+//			if (n.getRight(i) != null) {
+//				before = n.forwards.get(i);
+//			}
+			while (n.getRight(i) != null && key.compareTo(n.getRight(i).key) < 0) {
 				before = n;
-				n = n.forwards.get(i);
+				n = n.getRight(i);
 			}
 		}
 
