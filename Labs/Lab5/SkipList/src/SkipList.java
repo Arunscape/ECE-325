@@ -29,7 +29,7 @@ public class SkipList<K extends Comparable<K>, V> {
 			return String.format("%s(%s,%d)", value, key, forwards.size());
 		}
 
-		public Node right(int level) {
+		public Node getRight(int level) {
 			try {
 				return this.forwards.get(level);
 			} catch (java.lang.IndexOutOfBoundsException e) {
@@ -44,14 +44,6 @@ public class SkipList<K extends Comparable<K>, V> {
 				this.forwards.set(level, n);
 			} catch (java.lang.IndexOutOfBoundsException e) {
 				this.forwards.add(level, n);
-			}
-		}
-		
-		public Node getRight(Node n, int level) {
-			try {
-				return this.forwards.get(level);
-			} catch (java.lang.IndexOutOfBoundsException e) {
-				return null;
 			}
 		}
 
@@ -143,8 +135,8 @@ public class SkipList<K extends Comparable<K>, V> {
 		for (int i = 0; i <= level; i++) {
 			Node left = this.searchClosestNode(n.key, i);
 //			n.forwards.set(i, left.forwards.get(i));
-			n.setRight(left.getRight(n, level), level);
-			left.setRight(n, level);
+			n.setRight(left.getRight(i), i);
+			left.setRight(n, i);
 		}
 
 	}
@@ -189,20 +181,28 @@ public class SkipList<K extends Comparable<K>, V> {
 
 	public Node searchNode(K key) {
 
-		Node n = this.head.forwards.get(0);
-
-		for (int i = this.level; i >= 0; i--) {
-			if (n.forwards.size() == 0)
-				break;
-			while (n.forwards.get(i) != null && n.forwards.get(i).key.compareTo(key) >= 0) {
-				if (n.key.equals(key))
-					return n;
-				n = n.forwards.get(i);
-				if (n.key.equals(key))
-					return n;
-			}
-		}
-		return null;
+//		Node n = this.head.forwards.get(0);
+//
+//		for (int i = this.level; i >= 0; i--) {
+//			if (n.forwards.size() == 0)
+//				break;
+//			while (n.forwards.get(i) != null && n.forwards.get(i).key.compareTo(key) >= 0) {
+//				if (n.key.equals(key))
+//					return n;
+//				n = n.forwards.get(i);
+//				if (n.key.equals(key))
+//					return n;
+//			}
+//		}
+//		return null;
+		
+		Node before = this.searchClosestNode(key, 0);
+		Node right = before.getRight(0);
+		
+		if (right == null)
+			return null;
+		
+		return right.key.equals(key) ? right : null;
 	}
 
 	public Node searchClosestNode(K key, int minlevel) {
