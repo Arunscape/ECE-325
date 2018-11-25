@@ -207,21 +207,23 @@ public class SkipList<K extends Comparable<K>, V> {
 
 	public Node searchClosestNode(K key, int minlevel) {
 		Node before = null;
+		Node n = this.head;
 
 		for (int i = this.level; i >= minlevel; i--) {
-			Node n = this.head;
+			
 //			if (n.getRight(i) != null) {
 //				before = n.forwards.get(i);
 //			}
-			while (n.getRight(i) != null && key.compareTo(n.getRight(i).key) < 0) {
+			while (n.getRight(i) != null && key.compareTo(n.getRight(i).key) > 0) {
 				before = n;
 				n = n.getRight(i);
 			}
 		}
 
-		if (before == null)
-			before = this.head;
-		return before;
+//		if (before == null)
+//			before = this.head;
+//		return before;
+		return n;
 	}
 
 	/**
