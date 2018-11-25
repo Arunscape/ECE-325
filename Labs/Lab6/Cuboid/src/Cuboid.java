@@ -82,6 +82,14 @@ public class Cuboid {
 
         System.out.println("Sort by length");
         // TODO: Lab 6 Part 1-1 -- sort cuboids by length
+        java.util.Arrays.sort(cuboids, new java.util.Comparator<Cuboid>() {
+
+			@Override
+			public int compare(Cuboid c1, Cuboid c2) {
+				return Double.compare(c1.length, c2.length);
+			}
+        	
+        });
         
         for (Cuboid c: cuboids)
             System.out.println(c);
@@ -89,6 +97,14 @@ public class Cuboid {
 
         System.out.println("Sort by area");
         // TODO: Lab 6 Part 1-2 -- sort cuboids by area
+        java.util.Arrays.sort(cuboids, new java.util.Comparator<Cuboid>() {
+
+			@Override
+			public int compare(Cuboid c1, Cuboid c2) {
+				return Double.compare(c1.getArea(), c2.getArea());
+			}
+        	
+        });
         
         for (Cuboid c: cuboids)
             System.out.println(c);
@@ -96,6 +112,14 @@ public class Cuboid {
 
         System.out.println("Sort by volume");
         // TODO: Lab 6 Part 1-3 -- sort cuboids by volume
+        java.util.Arrays.sort(cuboids, new java.util.Comparator<Cuboid>() {
+
+			@Override
+			public int compare(Cuboid c1, Cuboid c2) {
+				return Double.compare(c1.getVolume(), c2.getVolume());
+			}
+        	
+        });
         
         for (Cuboid c: cuboids)
             System.out.println(c);
@@ -103,6 +127,21 @@ public class Cuboid {
 
         System.out.println("Sort by length first and then area");
         // TODO: Lab 6 Part 1-4 -- sort cuboids by length first and then area
+        
+        java.util.Arrays.sort(cuboids, new java.util.Comparator<Cuboid>() {
+
+			@Override
+			public int compare(Cuboid c1, Cuboid c2) {
+				int lengthCompare = Double.compare(c1.length, c2.length);
+				
+				if (lengthCompare != 0) {
+					return lengthCompare;
+				}
+				
+				return Double.compare(c1.getArea(), c2.getArea());
+			}
+        	
+        });
         
         for (Cuboid c: cuboids)
             System.out.println(c);
