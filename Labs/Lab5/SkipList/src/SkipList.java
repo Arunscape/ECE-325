@@ -62,24 +62,26 @@ public class SkipList<K extends Comparable<K>, V> {
 
 	private Node head = new Node(null, null, 0);
 
-//	public static int randomLevel() {
-//		Random random = new Random();
-//		int n = 0;
-//
-//		while (random.nextBoolean()) {
-//			n++;
-//		}
-//		return n;
-	public int randomLevel() {
-		// TESTING purposes
-		return this.size == 0 ? 0
-				: this.size == 1 ? 1
-						: this.size == 2 ? 0
-								: this.size == 3 ? 2
-										: this.size == 4 ? 0
-												: this.size == 5 ? 1 : this.size == 6 ? 0 : this.size == 7 ? 1 : null;
+	public static int randomLevel() {
+		Random random = new Random();
+		int n = 0;
 
+		while (random.nextBoolean()) {
+			n++;
+		}
+		return n;
 	}
+	
+//	public int randomLevel() {
+//		// this code is horrendus but it helped with debugging lmao
+//		return this.size == 0 ? 0
+//				: this.size == 1 ? 1
+//						: this.size == 2 ? 0
+//								: this.size == 3 ? 2
+//										: this.size == 4 ? 0
+//												: this.size == 5 ? 1 : this.size == 6 ? 0 : this.size == 7 ? 1 : null;
+//
+//	}
 
 	/**
 	 * Insert an new element into the skip list
@@ -140,20 +142,6 @@ public class SkipList<K extends Comparable<K>, V> {
 		}
 
 	}
-//	public void recursiveInsert(Node n, Node head, int level) {
-//		
-//		Node headRight = head.right(level);
-//		
-//		if (headRight == null) {
-//			head.setRight(n, level);
-//		}
-//		
-//		else if (headRight.key.compareTo(n.key) < 0) {
-//			recursiveInsert(n, headRight, level);
-//		}
-//		
-//		
-//	}
 
 	/**
 	 * Remove an element by the key
@@ -180,21 +168,6 @@ public class SkipList<K extends Comparable<K>, V> {
 	}
 
 	public Node searchNode(K key) {
-
-//		Node n = this.head.forwards.get(0);
-//
-//		for (int i = this.level; i >= 0; i--) {
-//			if (n.forwards.size() == 0)
-//				break;
-//			while (n.forwards.get(i) != null && n.forwards.get(i).key.compareTo(key) >= 0) {
-//				if (n.key.equals(key))
-//					return n;
-//				n = n.forwards.get(i);
-//				if (n.key.equals(key))
-//					return n;
-//			}
-//		}
-//		return null;
 		
 		Node before = this.searchClosestNode(key, 0);
 		Node right = before.getRight(0);
@@ -206,23 +179,15 @@ public class SkipList<K extends Comparable<K>, V> {
 	}
 
 	public Node searchClosestNode(K key, int minlevel) {
-		Node before = null;
 		Node n = this.head;
 
 		for (int i = this.level; i >= minlevel; i--) {
 			
-//			if (n.getRight(i) != null) {
-//				before = n.forwards.get(i);
-//			}
 			while (n.getRight(i) != null && key.compareTo(n.getRight(i).key) > 0) {
-				before = n;
 				n = n.getRight(i);
 			}
 		}
 
-//		if (before == null)
-//			before = this.head;
-//		return before;
 		return n;
 	}
 
@@ -271,37 +236,38 @@ public class SkipList<K extends Comparable<K>, V> {
 	 * @param args {@code String[]} Command line arguments
 	 */
 	public static void main(String[] args) {
-//		SkipList<Integer, String> list = new SkipList<Integer, String>();
-//		int[] keys = new int[10];
-//		for (int i = 0; i < 10; i++) { // Insert elements
-//			keys[i] = (int) (Math.random() * 200);
-//			list.insert(keys[i], "\"" + keys[i] + "\"");
-//		}
-//
-//		System.out.println(list);
-//
-//		for (int i = 0; i < 10; i += 3) {
-//			int key = keys[i];
-//			// Search elements
-//			System.out.println(String.format("Find element             %3d: value=%s", key, list.search(key)));
-//			// Remove some elements
-//			System.out.println(String.format("Remove element           %3d: value=%s", key, list.remove(key)));
-//			// Search the removed elements
-//			System.out.println(String.format("Find the removed element %3d: value=%s", key, list.search(key)));
-//		}
-//
-//		System.out.println(list);
-
 		SkipList<Integer, String> list = new SkipList<Integer, String>();
-		list.insert(5, "5");
-		list.insert(25, "25");
-		list.insert(30, "30");
-		list.insert(31, "31");
-		list.insert(42, "42");
-		list.insert(58, "58");
-		list.insert(62, "62");
-		list.insert(69, "69");
+		int[] keys = new int[10];
+		for (int i = 0; i < 10; i++) { // Insert elements
+			keys[i] = (int) (Math.random() * 200);
+			list.insert(keys[i], "\"" + keys[i] + "\"");
+		}
+
 		System.out.println(list);
+
+		for (int i = 0; i < 10; i += 3) {
+			int key = keys[i];
+			// Search elements
+			System.out.println(String.format("Find element             %3d: value=%s", key, list.search(key)));
+			// Remove some elements
+			System.out.println(String.format("Remove element           %3d: value=%s", key, list.remove(key)));
+			// Search the removed elements
+			System.out.println(String.format("Find the removed element %3d: value=%s", key, list.search(key)));
+		}
+
+		System.out.println(list);
+
+		// Debugging purposes
+//		SkipList<Integer, String> list = new SkipList<Integer, String>();
+//		list.insert(5, "5");
+//		list.insert(25, "25");
+//		list.insert(30, "30");
+//		list.insert(31, "31");
+//		list.insert(42, "42");
+//		list.insert(58, "58");
+//		list.insert(62, "62");
+//		list.insert(69, "69");
+//		System.out.println(list);
 	}
 
 }
