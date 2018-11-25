@@ -71,7 +71,7 @@ public class SkipList<K extends Comparable<K>, V> {
 		}
 		return n;
 	}
-	
+
 //	public int randomLevel() {
 //		// this code is horrendus but it helped with debugging lmao
 //		return this.size == 0 ? 0
@@ -151,8 +151,17 @@ public class SkipList<K extends Comparable<K>, V> {
 	 */
 	public V remove(K key) {
 		// TODO: Lab 5 Part 1-2 -- skip list deletion
+		Node n = this.searchNode(key);
+		for (int i = 0; i <= n.level(); i++) {
+			Node left = this.searchClosestNode(key, i);
+			Node right = n.getRight(i);
 
-		return null;
+			left.setRight(right, i);
+		}
+
+		V v = n.value;
+		n = null;
+		return v;
 	}
 
 	/**
@@ -168,13 +177,13 @@ public class SkipList<K extends Comparable<K>, V> {
 	}
 
 	public Node searchNode(K key) {
-		
+
 		Node before = this.searchClosestNode(key, 0);
 		Node right = before.getRight(0);
-		
+
 		if (right == null)
 			return null;
-		
+
 		return right.key.equals(key) ? right : null;
 	}
 
@@ -182,7 +191,7 @@ public class SkipList<K extends Comparable<K>, V> {
 		Node n = this.head;
 
 		for (int i = this.level; i >= minlevel; i--) {
-			
+
 			while (n.getRight(i) != null && key.compareTo(n.getRight(i).key) > 0) {
 				n = n.getRight(i);
 			}
