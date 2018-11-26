@@ -221,10 +221,6 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 			this.colourBlack(n);
 			return null;
 		}
-		
-		if (isNil(n)) {
-			
-		}
 
 		deleteAsBST(key);
 
