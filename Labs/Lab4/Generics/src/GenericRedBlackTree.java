@@ -41,8 +41,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 				n = n.right;
 			} else if (n.key.equals(key)) {
 				return n;
-			}
-			else {
+			} else {
 				System.out.println("REEEEEE");
 			}
 		}
@@ -51,10 +50,10 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 
 	public void insert(K key, V value) {
 		// TODO: Lab 4 Part 3-2 -- insert an element into the tree
-		
+
 		if (this.find(key) != null)
 			return;
-					
+
 		this.size++;
 		// BST Insert
 
@@ -204,7 +203,6 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		n.parent = oldLeft;
 	}
 
-	
 	public V remove(K key) {
 		// TODO: Lab 4 Part 3-3 -- remove an element from the tree
 
@@ -214,27 +212,33 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		}
 		V v = n.value;
 		size--;
-		
-		if (n.left == null  && n.right == null) {
-			n.key = null;
-			n.value = null;
-			this.colourBlack(n);
-			return null;
-		}
 
-		deleteAsBST(key);
+		deleteAsBST(n);
 
 		return v;
 	}
 
-	public void deleteAsBST(K key) {
+	public void deleteAsBST(Node n) {
+
+		if (isLeaf(n)) {
+			if (n.isLeftChild()) {
+				n.parent.left = null;
+			} else if (n.isRightChild()) {
+				n.parent.right = null;
+			}
+			n = null;
+		}
 
 		this.root = recursiveDelete(this.root, key);
 
 	}
-	
+
 	public boolean notAnull(Node n) {
 		return n != null && !n.isNil();
+	}
+
+	public boolean isLeaf(Node n) {
+		return !notAnull(n.left) && !notaNull(N.right);
 	}
 
 	public Node recursiveDelete(Node root, K key) {
@@ -249,31 +253,26 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		}
 
 		else {
-			if ((root.left == null || root.left.isNil())&&(root.right == null || root.right.isNil())) {
+			if ((root.left == null || root.left.isNil()) && (root.right == null || root.right.isNil())) {
 				root.key = null;
 				root.value = null;
 				this.colourBlack(root);
-			}
-			else if (root.left == null || root.left.isNil()) {
+			} else if (root.left == null || root.left.isNil()) {
 				this.swapNodes(root, root.right);
-			}
-			else if (root.right == null || root.right.isNil()) {
-				this.swapNodes(root,  root.left);
-			}
-			else {
+			} else if (root.right == null || root.right.isNil()) {
+				this.swapNodes(root, root.left);
+			} else {
 				Node nextLarger = this.nextLarger(root);
 				root = this.recursiveDelete(root, nextLarger.key);
 			}
 		}
-		
-		
+
 		return root;
-}
-	
+	}
+
 	public void fixDelColour(Node n) {
 		;
 	}
-
 
 	public Node nextLarger(Node n) {
 		// next larger node is the leftmost node in right child's subtree
@@ -324,9 +323,9 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	}
 
 	public String inOrder(Node root) {
-		return 
-			root == null? "":(root.left == null ? "" : inOrder(root.left)) + root + " "
-				+ (root.right == null ? "" : inOrder(root.right));
+		return root == null ? ""
+				: (root.left == null ? "" : inOrder(root.left)) + root + " "
+						+ (root.right == null ? "" : inOrder(root.right));
 	}
 
 	/**
@@ -418,6 +417,20 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 
 		public Node sibling() {
 			return this.parent.left == this ? this.parent.right : this.parent.left;
+		}
+
+		public boolean isLeftChild() {
+			if (this.parent != null)
+				return this == this.parent.left;
+			else
+				return false;
+		}
+
+		public boolean isRightChild() {
+			if (this.parent != null)
+				return this == this.parent.right;
+			else
+				return false;
 		}
 
 		/**
