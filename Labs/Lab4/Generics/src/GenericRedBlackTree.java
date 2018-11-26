@@ -17,7 +17,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		// TODO: Lab 4 Part 3-1 -- find an element from the tree
 
 		Node n = this.root;
-		while (n != null && !n.isNil()) {
+		while (notAnull(n)) {
 			if (key.compareTo(n.key) < -0) {
 				n = n.left;
 			} else if (key.compareTo(n.key) > 0) {
@@ -34,7 +34,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	public Node findNode(K key) {
 
 		Node n = this.root;
-		while (n!= null && !n.isNil()) {
+		while (notAnull(n)) {
 			if (key.compareTo(n.key) < -0) {
 				n = n.left;
 			} else if (key.compareTo(n.key) > 0) {
@@ -143,14 +143,14 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	@SafeVarargs
 	public final void colourBlack(Node... nodes) {
 		for (Node n : nodes)
-			if (n != null && !n.isNil()) // nils are already black
+			if (notAnull(n)) // nils are already black
 				n.colour = BLACK;
 	}
 
 	@SafeVarargs
 	public final void colourRed(Node... nodes) {
 		for (Node n : nodes)
-			if (n != null && !n.isNil())
+			if (notAnull(n))
 				n.colour = RED;
 	}
 
@@ -204,67 +204,6 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		n.parent = oldLeft;
 	}
 
-	/**
-	 * Remove an element from the tree
-	 * 
-	 * @param key {@code K} the key of the element
-	 * @return {@code V} the value of the removed element
-	 */
-//	public V remove(K key) {
-//		// TODO: Lab 4 Part 3-3 -- remove an element from the tree
-//
-//		Node n = this.findNode(key);
-//		if (n == null) {
-//			return null;
-//		}
-//		
-//		if (n.left != null && n.right != null && !n.left.isNil() && !n.right.isNil()) {
-//			Node nextLarger = this.nextLarger(n);
-//			
-//			this.swapNodes(n, nextLarger);
-//			n = nextLarger;
-//		}
-//
-//		size--;
-//		
-//		Node child;
-//		
-//		if ( n.left != null && !n.left.isNil()) {
-//			child = n.left;
-//		}
-//		else {
-//			child = n.right;
-//		}
-//		
-//		if (n != this.root) {
-//			child.parent = n.parent;
-//			
-//			if ( n == n.parent.left) {
-//				n.parent.left = child;
-//			}
-//			else {
-//				n.parent.right = child;
-//			}
-//		}
-//		else if ( child == null || child.isNil()) {
-//			root = null;
-//		}
-//		else {
-//			root = child;
-//			child.parent = null;
-//		}
-//		
-//		if (n.isBLACK()) {
-//			if ( child.isRED()) {
-//				this.colourBlack(child);
-//			}
-//			else {
-//				fixDelColour(n);
-//			}
-//		}
-//
-//		return n.value;
-//	}
 	
 	public V remove(K key) {
 		// TODO: Lab 4 Part 3-3 -- remove an element from the tree
@@ -298,8 +237,8 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 
 	}
 	
-	public boolean isNil(Node n) {
-		return n == null || n.isNil();
+	public boolean notAnull(Node n) {
+		return n != null && !n.isNil();
 	}
 
 	public Node recursiveDelete(Node root, K key) {
