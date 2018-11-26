@@ -17,7 +17,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		// TODO: Lab 4 Part 3-1 -- find an element from the tree
 
 		Node n = this.root;
-		while (!n.isNil()) {
+		while (n != null && !n.isNil()) {
 			if (key.compareTo(n.key) < -0) {
 				n = n.left;
 			} else if (key.compareTo(n.key) > 0) {
@@ -51,6 +51,10 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 
 	public void insert(K key, V value) {
 		// TODO: Lab 4 Part 3-2 -- insert an element into the tree
+		
+		if (this.find(key) != null)
+			return;
+					
 		this.size++;
 		// BST Insert
 
@@ -266,17 +270,21 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		// TODO: Lab 4 Part 3-3 -- remove an element from the tree
 
 		Node n = this.findNode(key);
-		V v = n.value;
 		if (n == null) {
 			return null;
 		}
-
+		V v = n.value;
 		size--;
-		if (n.left == null && n.right == null) {
+		
+		if (n.left == null  && n.right == null) {
 			n.key = null;
 			n.value = null;
 			this.colourBlack(n);
 			return null;
+		}
+		
+		if (isNil(n)) {
+			
 		}
 
 		deleteAsBST(key);
@@ -288,6 +296,10 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 
 		this.root = recursiveDelete(this.root, key);
 
+	}
+	
+	public boolean isNil(Node n) {
+		return n == null || n.isNil();
 	}
 
 	public Node recursiveDelete(Node root, K key) {
