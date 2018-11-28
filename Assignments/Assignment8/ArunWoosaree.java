@@ -48,7 +48,7 @@ public int getTemp (int a, int b){
 In this case where the function is so simple, code fragment 2A with refactoring technique
 'Inline temp' is easier to read.
 So, the first refactoring technique is more appropriate in this situation
-because code fragment 2B with refactoring technique 2B 
+because code fragment 2B with refactoring technique
 'Extract Method Followed by Replace Temp with Query' adds unnecessary complexity here.
   In the case where the temporary variable is more complex to calculate however, the
   second refactoring technique would be more preferred.
@@ -62,7 +62,7 @@ https://www.refactoring.com/catalog/replaceErrorCodeWithException.html
 Error codes are a pretty old practice. Besides, Java has exceptions which are made
 exactly for this purpose. With error codes, the return value of the function could be
 mistaken for proper functionality, plus the programmer has to implement checks in the
-code for the error codes, and also to detect and handle the errors. 
+code for the error codes, and also to detect and handle the errors.
 This is made easier and more succinct with Exceptions, plus it distinguishes
 normal code operation from the error cases.
 */
@@ -95,7 +95,7 @@ The output from code fragment B is 20
 This is because when we 'pull up the method', the resulting code fragment B
 now has two functions with the same name, but different parameters, which means
 that the method is being overloaded. This allows java to choose the most appropriate
-function to use based on the parameter type passed, so while code fragment A would 
+function to use based on the parameter type passed, so while code fragment A would
 print out a value of 10, in code fragment B, the function k is called
 with an input parameter of 2, and java chooses to evaluate the method with
 the int type input parameter, so the output printed is 20.
