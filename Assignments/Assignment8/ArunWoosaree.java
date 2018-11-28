@@ -77,10 +77,12 @@ refactoring technique when the value is not meant to be changed.
 
 
 Introduce Explaining Variable refactoring is advantageous when the programmer
-intends to make a complex bit of code more readable. A thoughtful name for
-the variable explains the significance of its value, which makes the code more readable.
-Also, if the value is used multiple times in the code, introducing a variable
-makes it easier to maintain the code if the value needs to be updated at some point.
+intends to make a complex bit of code more readable. 
+(Like when calculating the value is complex and would be messy/distrcting inline)
+A thoughtful name for the variable explains the significance of its value, which 
+makes the code more readable. Also, if the value is used multiple times in the code, 
+introducing a variable makes it easier to maintain the code if the value needs to be 
+updated at some point.
 */
 
 /*
