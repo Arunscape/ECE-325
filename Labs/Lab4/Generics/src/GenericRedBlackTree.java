@@ -229,7 +229,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 			n = null;
 		}
 
-		this.root = recursiveDelete(this.root, key);
+		this.root = recursiveDelete(this.root, n.key);
 
 	}
 
@@ -238,7 +238,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	}
 
 	public boolean isLeaf(Node n) {
-		return !notAnull(n.left) && !notaNull(N.right);
+		return !notAnull(n.left) && !notAnull(n.right);
 	}
 
 	public Node recursiveDelete(Node root, K key) {

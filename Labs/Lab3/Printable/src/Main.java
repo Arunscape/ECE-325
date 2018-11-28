@@ -3,13 +3,15 @@ import java.util.Date;
 
 public class Main {
 	
-	public BigInteger fnv(BigInteger[] data, int length) {
+	public static long fnv(String data) {
+		
+		
 		BigInteger h = new BigInteger("14695981039346656037");
 		
-		for (int i=0; i< length; i++) {
-			h = (new BigInteger("1099511628211")).multiply(h).xor(data[i]);
+		for (int i=0; i< data.length(); i++) {
+			h = (new BigInteger("1099511628211")).multiply(h).xor(BigInteger.valueOf(Character.getNumericValue(data.charAt(i))));
 		}
-		return h;
+		return h.longValue();
 	}
 
 	public static void main(String[] args) {
@@ -17,8 +19,12 @@ public class Main {
 		ProjManager p = new ProjManager("Rob", 6000, "Shitty Project", new Date());
 		
 		System.out.println(String.format("hwEng raised salary: %f\nprojMan raised salary: %f", 
-				h.getBaseSalary()+h.RaiseSalary(), p.getBaseSalary()+p.RaiseSalary()));
-		
+				h.RaiseSalary(), p.RaiseSalary()));
+
+//		System.out.println(String.format("hwEng raised salary: %f\nprojMan raised salary: %f", 
+//				h.getBaseSalary()+h.RaiseSalary(), p.getBaseSalary()+p.RaiseSalary()));
+//		System.out.println(String.format("hwEng raised salary: %f\nprojMan raised salary: %f", 
+//				h.getBaseSalary()+h.RaiseSalary(), p.getBaseSalary()+p.RaiseSalary()));
 		
 		System.out.println(); System.out.println();
 		Customer c = new Customer("Cus", 9001);
@@ -28,6 +34,11 @@ public class Main {
 		
 		System.out.println(); System.out.println();
 		System.out.println();
+		
+		System.out.println(fnv("heeeeyyy"));
+		System.out.println(fnv("oooooooooohhh"));
+		System.out.println(fnv("aaaahhhhh"));
+		System.out.println(fnv("weeeeee"));
 	}
 
 }

@@ -58,6 +58,10 @@ class Employee extends Person {
 	public double getBaseSalary() {
 		return this.baseSalary;
 	}
+	
+	public double setSalary(double s) {
+		return this.baseSalary += s;
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -84,7 +88,7 @@ class HwEngineer extends Employee implements SalaryRaisable {
 
 	@Override
 	public double RaiseSalary() {
-		return this.getBaseSalary() * 0.18;
+		return this.setSalary(this.getBaseSalary() * 0.18);
 	}
 }
 
@@ -134,7 +138,7 @@ class ProjManager extends SwEngineer implements Printable, SalaryRaisable {
 
 	@Override
 	public double RaiseSalary() {
-		return this.getBaseSalary() * 0.24;
+		return this.setSalary(this.getBaseSalary()* 0.24);
 	}
 
 	@Override
