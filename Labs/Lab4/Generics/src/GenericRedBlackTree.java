@@ -227,6 +227,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 				n.parent.right = null;
 			}
 			n = null;
+			return;
 		}
 
 		this.root = recursiveDelete(this.root, n.key);
@@ -242,7 +243,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	}
 
 	public Node recursiveDelete(Node root, K key) {
-		if (root == null || root.isNil()) {
+		if (!notAnull(root)) {
 			return null;
 		}
 
@@ -253,18 +254,15 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		}
 
 		else {
-			if ((root.left == null || root.left.isNil()) && (root.right == null || root.right.isNil())) {
-				root.key = null;
-				root.value = null;
-				this.colourBlack(root);
-			} else if (root.left == null || root.left.isNil()) {
-				this.swapNodes(root, root.right);
-			} else if (root.right == null || root.right.isNil()) {
-				this.swapNodes(root, root.left);
-			} else {
+			if (!notAnull(root.left)) {
+				return root.right;
+			} else if (!notAnull(root.right)) {
+				return root.left;
+			}
+		
 				Node nextLarger = this.nextLarger(root);
 				root = this.recursiveDelete(root, nextLarger.key);
-			}
+		
 		}
 
 		return root;

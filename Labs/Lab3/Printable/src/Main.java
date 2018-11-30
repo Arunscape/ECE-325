@@ -21,10 +21,10 @@ public class Main {
 		System.out.println(String.format("hwEng raised salary: %f\nprojMan raised salary: %f", 
 				h.RaiseSalary(), p.RaiseSalary()));
 
-//		System.out.println(String.format("hwEng raised salary: %f\nprojMan raised salary: %f", 
-//				h.getBaseSalary()+h.RaiseSalary(), p.getBaseSalary()+p.RaiseSalary()));
-//		System.out.println(String.format("hwEng raised salary: %f\nprojMan raised salary: %f", 
-//				h.getBaseSalary()+h.RaiseSalary(), p.getBaseSalary()+p.RaiseSalary()));
+		System.out.println(String.format("hwEng raised salary: %f\nprojMan raised salary: %f", 
+				h.getBaseSalary()+h.RaiseSalary(), p.getBaseSalary()+p.RaiseSalary()));
+		System.out.println(String.format("hwEng raised salary: %f\nprojMan raised salary: %f", 
+				h.getBaseSalary()+h.RaiseSalary(), p.getBaseSalary()+p.RaiseSalary()));
 		
 		System.out.println(); System.out.println();
 		Customer c = new Customer("Cus", 9001);
