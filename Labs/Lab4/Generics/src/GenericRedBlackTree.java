@@ -213,123 +213,90 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		size--;
 
 		Node y = n;
-		if (notAnull(n)) {
-			if (notAnull(n.left) && notAnull(n.right)) {
-				Node nextSmaller = this.nextLarger(n);
-				n.value = nextSmaller.value;
-				n.key = nextSmaller.key;
-				y = nextSmaller;
+		boolean yOriginalColour = y.colour;
+		Node x;
+
+		if (!notAnull(n.left)) {
+			x = n.right;
+			this.transplant(n, n.right);
+			
+		} else if (!notAnull(n.right)) {
+			x = n.left;
+			this.transplant(n, n.left);
+		} else {
+			y = this.nextLarger(n);
+			yOriginalColour = y.colour;
+			x = y.right;
+			if (y.parent == n) {
+				x.parent = y;
+			} else {
+				this.transplant(y, y.right);
+				y.right = n.right;
+				y.right.parent = y;
 			}
-			if (notAnull(y.left) && notAnull(y.right)) {
-				if (y.isRED()) {
-					this.swapNodes(n, y);
-					return v;
-				}
-
-				this.deleteCase1(y);
-				this.swapNodes(y, new Node(null, null));
-				return v;
-			} else if (!notAnull(y.left) && notAnull(y.right)) {
-				if (y.isRED()) {
-					this.swapNodes(y, y.right);
-					return v;
-				}
-				if (y.right.isRED()) {
-					this.colourBlack(y.right);
-					this.swapNodes(y, y.right);
-					return v;
-
-				}
-			} else if (notAnull(y.left) && notAnull(y.right)) {
-				if (y.isRED()) {
-					this.swapNodes(y, y.left);
-					return v;
-				}
-				if (y.left.isRED()) {
-					this.colourBlack(y.left);
-					this.swapNodes(y, y.left);
-					return v;
-
-				}
-			}
+			this.transplant(n, y);
+			y.left = n.left;
+			y.left.parent = y;
+			y.colour = n.colour;
+		}
+		if (yOriginalColour) { //if black
+			delete_fixup(x);
 		}
 		return v;
 	}
-
-	public void deleteCase1(Node n) {
-		if (n.parent != null)
-			deleteCase2(n);
-	}
-
-	public void deleteCase2(Node n) {
-		Node sibling = n.sibling();
-		if (sibling.isRED()) {
-			this.colourRed(n.parent);
-			this.colourBlack(sibling);
-			if (n.isLeftChild())
-				this.rotateLeft(n.parent);
-
-			else
-				this.rotateRight(n.parent);
-		}
-		deleteCase3(n);
-	}
-
-	public void deleteCase3(Node n) {
-		Node sibling = n.sibling();
-		if ((n.parent.isBLACK()) && sibling.isBLACK() && sibling.left.isBLACK() && sibling.right.isBLACK()) {
-			this.colourRed(sibling);
-			deleteCase1(n.parent);
-		} else {
-			deleteCase4(n);
-		}
-	}
-
-	public void deleteCase4(Node n) {
-		Node sibling = n.sibling();
-		if (n.parent.isRED() && sibling.isBLACK() && sibling.left.isBLACK() && sibling.right.isBLACK()) {
-			this.colourRed(sibling);
-			this.colourBlack(n.parent);
-		} else {
-			deleteCase5(n);
-		}
-	}
 	
-	   public void deleteCase5(Node n) {
-	    	Node sibling = n.sibling();
-	    	if (sibling.isBLACK()) {
-	    		if (n.isLeftChild() &&
-	    				sibling.right.isBLACK() &&
-	    				sibling.left.isRED()) {
-	    			this.colourRed(sibling);
-	    			this.colourBlack(sibling.left);
-	    			this.rotateRight(sibling);
-	    		} else if((n.isRightChild()) &&
-	    				sibling.left.isBLACK() &&
-	    				sibling.right.isRED()) {
-	    			this.colourRed(sibling);
-	    			this.colourBlack(sibling.right);
-	    			this.rotateLeft(sibling);
-	    		}
-	    	}
-	    	deleteCase6(n);
+	public void delete_fixup(Node x) {
+		Node w;
+		while (x != this.root && x.isBLACK()) {
+			if (x.isLeftChild()) {
+				w = x.parent.right;
+				if (w.isRED()) {
+					this.colourBlack(w);
+					this.colourRed(x.parent);
+					this.rotateLeft(x.parent);
+					w = x.parent.right;
+				}
+				
+				if (w.left.isBLACK() && w.right.isBLACK()) {
+					this.colourRed(w);
+					x = x.parent;
+				} else if(w.right.isBLACK()){
+					this.colourBlack(w.left);
+					this.colourRed(w);
+					this.rotateRight(w);
+					w = x.parent.right;
+				}
+				w.colour = x.parent.colour;
+				this.colourBlack(x.parent, w.right);
+				this.rotateLeft(x.parent);
+				x = this.root;
+			}
+			else {
+				w = x.parent.left;
+				if (w.isRED()) {
+					this.colourBlack(w);
+					this.colourRed(x.parent);
+					this.rotateRight(x.parent);
+					w = x.parent.left;
+				}
+				
+				if (w.right.isBLACK() && w.left.isBLACK()) {
+					this.colourRed(w);
+					x = x.parent;
+				} else if(w.left.isBLACK()){
+					this.colourBlack(w.right);
+					this.colourRed(w);
+					this.rotateLeft(w);
+					w = x.parent.left;
+				}
+				w.colour = x.parent.colour;
+				this.colourBlack(x.parent, w.left);
+				this.rotateRight(x.parent);
+				x = this.root;
+			}
+		}
+		this.colourBlack(x);
 	}
-	
-	   public void deleteCase6(Node n) {
-	    	Node sibling = n.sibling();
-	    	
-	    	sibling.colour = n.parent.colour;
-	    	this.colourBlack(n.parent);
-	    	
-	    	if(n.isLeftChild()) {
-	    		this.colourBlack(sibling.right);
-	    		this.rotateLeft(n.parent);    		
-	    	} else {
-	    		this.colourBlack(sibling.left);
-	    		this.rotateRight(n.parent);
-	    	}
-	}
-	
 
 	public void deleteAsBST(Node n) {
 
@@ -396,10 +363,10 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		return nextLarger.parent;
 
 	}
-	
+
 	public Node nextSmaller(Node n) {
 		Node nextSmaller = n.left;
-		
+
 		if (n.left == null || n.left.isNil()) {
 			return n;
 		}
