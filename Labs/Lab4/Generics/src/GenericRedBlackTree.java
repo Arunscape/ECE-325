@@ -437,31 +437,60 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	 */
 	public static void main(String[] args) {
 		GenericRedBlackTree<Integer, String> rbt = new GenericRedBlackTree<Integer, String>();
-		int[] keys = new int[10];
-		for (int i = 0; i < 10; i++) {
-			keys[i] = (int) (Math.random() * 200);
-			System.out.println(String.format("%2d Insert: %-3d ", i + 1, keys[i]));
-			rbt.insert(keys[i], "\"" + keys[i] + "\"");
-		} // for (int i = 0; i < 10; i++)
-
-		assert rbt.root.colour == GenericRedBlackTree.Node.BLACK;
-		System.out.println(rbt.root); // This helps to figure out the tree structure
-		System.out.println(rbt);
-
-		System.out.println();
-		System.out.println();
+//		int[] keys = new int[10];
+//		for (int i = 0; i < 10; i++) {
+//			keys[i] = (int) (Math.random() * 200);
+//			System.out.println(String.format("%2d Insert: %-3d ", i + 1, keys[i]));
+//			rbt.insert(keys[i], "\"" + keys[i] + "\"");
+//		} // for (int i = 0; i < 10; i++)
+//
+//		assert rbt.root.colour == GenericRedBlackTree.Node.BLACK;
+//		System.out.println(rbt.root); // This helps to figure out the tree structure
+//		System.out.println(rbt);
+//
+//		System.out.println();
+//		System.out.println();
+//		rbt.printBreadthFirstSearch();
+//		System.out.println();
+//		System.out.println();
+//
+//		for (int i = 0; i < 10; i++) {
+//			System.out.println(String.format("%2d Delete: %3d(%s)", i + 1, keys[i], rbt.remove(keys[i])));
+//			rbt.printBreadthFirstSearch();
+//			if ((i + 1) % 5 == 0) {
+//				System.out.println(rbt);
+//			} // if ((i + 1) % 5 == 0)
+//		} // for (int i = 0; i < 10; i++)
+		
+		// test
+		rbt.insert(34, "34");
+		rbt.insert(64, "64");
+		rbt.insert(129, "129");
+		rbt.insert(187, "187");
+		rbt.insert(92, "92");
+		rbt.insert(32, "32");
+		rbt.insert(162, "162");
+		rbt.insert(188, "188");
+		rbt.insert(77, "77");
+		rbt.insert(37, "37");
 		rbt.printBreadthFirstSearch();
-		System.out.println();
-		System.out.println();
-
-		for (int i = 0; i < 10; i++) {
-			System.out.println(String.format("%2d Delete: %3d(%s)", i + 1, keys[i], rbt.remove(keys[i])));
-			rbt.printBreadthFirstSearch();
-			if ((i + 1) % 5 == 0) {
-				System.out.println(rbt);
-			} // if ((i + 1) % 5 == 0)
-		} // for (int i = 0; i < 10; i++)
-
+		
+		rbt.remove(34);
+		System.out.println("removing 34");
+		rbt.printBreadthFirstSearch();
+		rbt.remove(64);
+		System.out.println("removing 64");
+		rbt.printBreadthFirstSearch();
+		rbt.remove(129);
+		System.out.println("removing 129");
+		rbt.printBreadthFirstSearch();
+		rbt.remove(187);
+		System.out.println("removing 187");
+		rbt.printBreadthFirstSearch();
+		rbt.remove(92);
+		System.out.println("removing 92");
+		rbt.printBreadthFirstSearch();
+		
 	}
 
 	/**
