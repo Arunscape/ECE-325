@@ -219,7 +219,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		if (!notAnull(n.left)) {
 			x = n.right;
 			this.transplant(n, n.right);
-			
+
 		} else if (!notAnull(n.right)) {
 			x = n.left;
 			this.transplant(n, n.left);
@@ -239,12 +239,12 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 			y.left.parent = y;
 			y.colour = n.colour;
 		}
-		if (yOriginalColour) { //if black
+		if (yOriginalColour) { // if black
 			delete_fixup(x);
 		}
 		return v;
 	}
-	
+
 	public void delete_fixup(Node x) {
 		Node w;
 		while (x != this.root && x.isBLACK()) {
@@ -256,11 +256,13 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 					this.rotateLeft(x.parent);
 					w = x.parent.right;
 				}
-				
-				if (w.left.isBLACK() && w.right.isBLACK()) {
+
+				if (w.left == null || w.right == null) {
+					;
+				} else if (w.left.isBLACK() && w.right.isBLACK()) {
 					this.colourRed(w);
 					x = x.parent;
-				} else if(w.right.isBLACK()){
+				} else if (w.right.isBLACK()) {
 					this.colourBlack(w.left);
 					this.colourRed(w);
 					this.rotateRight(w);
@@ -270,8 +272,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 				this.colourBlack(x.parent, w.right);
 				this.rotateLeft(x.parent);
 				x = this.root;
-			}
-			else {
+			} else {
 				w = x.parent.left;
 				if (w.isRED()) {
 					this.colourBlack(w);
@@ -279,11 +280,13 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 					this.rotateRight(x.parent);
 					w = x.parent.left;
 				}
-				
-				if (w.right.isBLACK() && w.left.isBLACK()) {
+
+				if (w.right == null || w.left == null) {
+					;
+				} else if (w.right.isBLACK() && w.left.isBLACK()) {
 					this.colourRed(w);
 					x = x.parent;
-				} else if(w.left.isBLACK()){
+				} else if (w.left.isBLACK()) {
 					this.colourBlack(w.right);
 					this.colourRed(w);
 					this.rotateLeft(w);
@@ -461,7 +464,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 //				System.out.println(rbt);
 //			} // if ((i + 1) % 5 == 0)
 //		} // for (int i = 0; i < 10; i++)
-		
+
 		// test
 		rbt.insert(34, "34");
 		rbt.insert(64, "64");
@@ -474,7 +477,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		rbt.insert(77, "77");
 		rbt.insert(37, "37");
 		rbt.printBreadthFirstSearch();
-		
+
 		rbt.remove(34);
 		System.out.println("removing 34");
 		rbt.printBreadthFirstSearch();
@@ -490,7 +493,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		rbt.remove(92);
 		System.out.println("removing 92");
 		rbt.printBreadthFirstSearch();
-		
+
 	}
 
 	/**
