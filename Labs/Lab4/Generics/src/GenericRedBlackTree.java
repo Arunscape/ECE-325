@@ -220,18 +220,47 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 
 	public void deleteAsBST(Node n) {
 
-		if (isLeaf(n)) {
-			if (n.isLeftChild()) {
-				n.parent.left = null;
-			} else if (n.isRightChild()) {
-				n.parent.right = null;
+//		if (isLeaf(n)) {
+//			if (n.isLeftChild()) {
+//				n.parent.left = null;
+//			} else if (n.isRightChild()) {
+//				n.parent.right = null;
+//			}
+//			n = null;
+//			return;
+//		}
+		
+		if (!notAnull(n.left))
+			this.transplant(n, n.right);
+		else if (!notAnull(n.right))
+			this.transplant(n, n.left);
+		else {
+			Node y = this.nextLarger(n);
+			if (y.parent != n) {
+				this.transplant(y, y.right);
+				y.right = n.right;
+				y.right.parent = y;
 			}
-			n = null;
-			return;
+			this.transplant(n, y);
+			y.left = n.left;
+			y.left.parent = y;
 		}
-
-		this.root = recursiveDelete(this.root, n.key);
-
+			
+			
+	}
+	
+	//http://crypto.cs.mcgill.ca/~crepeau/COMP251/03graphsC.pdf
+	public void transplant(Node u, Node v) {
+		if (u.parent == null) {
+			this.root = v;
+		} else if (u.isLeftChild()) {
+			u.parent.left = v;
+		} else {
+			u.parent.right = v;
+		}
+		if (notAnull(v)) {
+			v.parent = u.parent;
+		}
 	}
 
 	public boolean notAnull(Node n) {
@@ -242,35 +271,6 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		return !notAnull(n.left) && !notAnull(n.right);
 	}
 
-	public Node recursiveDelete(Node root, K key) {
-		if (!notAnull(root)) {
-			return null;
-		}
-
-		if (key.compareTo(root.key) < 0) {
-			root.left = recursiveDelete(root.left, key);
-		} else if (key.compareTo(root.key) > 0) {
-			root.right = recursiveDelete(root.right, key);
-		}
-
-		else {
-			if (!notAnull(root.left)) {
-				return root.right;
-			} else if (!notAnull(root.right)) {
-				return root.left;
-			}
-		
-				Node nextLarger = this.nextLarger(root);
-				root = this.recursiveDelete(root, nextLarger.key);
-		
-		}
-
-		return root;
-	}
-
-	public void fixDelColour(Node n) {
-		;
-	}
 
 	public Node nextLarger(Node n) {
 		// next larger node is the leftmost node in right child's subtree
