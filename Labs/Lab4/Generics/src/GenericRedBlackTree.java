@@ -155,7 +155,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 
 	public void rotateLeft(Node n) {
 
-		if (n.right.isNil()) {
+		if (!notAnull(n.right)) {
 			return;
 		}
 
@@ -180,7 +180,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 
 	public void rotateRight(Node n) {
 
-		if (n.left.isNil()) {
+		if (!notAnull(n.left)) {
 			return;
 		}
 
@@ -257,7 +257,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 					w = x.parent.right;
 				}
 				
-				if (w.left.isBLACK() && w.right.isBLACK()) {
+				if ((w.left == null || w.left.isBLACK()) && (w.right == null || w.right.isBLACK())) {
 					this.colourRed(w);
 					x = x.parent;
 				} else if(w.right.isBLACK()){
@@ -266,7 +266,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 					this.rotateRight(w);
 					w = x.parent.right;
 				}
-				w.colour = x.parent.colour;
+				w.colour = x.parent == null ? true : x.parent.colour;
 				this.colourBlack(x.parent, w.right);
 				this.rotateLeft(x.parent);
 				x = this.root;
@@ -280,7 +280,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 					w = x.parent.left;
 				}
 				
-				if (w.right.isBLACK() && w.left.isBLACK()) {
+				if ((w.right == null || w.right.isBLACK()) && (w.left == null || w.left.isBLACK())) {
 					this.colourRed(w);
 					x = x.parent;
 				} else if(w.left.isBLACK()){
@@ -289,7 +289,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 					this.rotateLeft(w);
 					w = x.parent.left;
 				}
-				w.colour = x.parent.colour;
+				w.colour = x.parent == null ? true : x.parent.colour;
 				this.colourBlack(x.parent, w.left);
 				this.rotateRight(x.parent);
 				x = this.root;
