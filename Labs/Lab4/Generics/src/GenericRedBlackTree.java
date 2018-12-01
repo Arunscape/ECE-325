@@ -204,7 +204,6 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	}
 
 	public V remove(K key) {
-		// TODO: Lab 4 Part 3-3 -- remove an element from the tree
 
 		Node n = this.findNode(key);
 		if (n == null) {
@@ -213,10 +212,124 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		V v = n.value;
 		size--;
 
-		deleteAsBST(n);
+		Node y = n;
+		if (notAnull(n)) {
+			if (notAnull(n.left) && notAnull(n.right)) {
+				Node nextSmaller = this.nextLarger(n);
+				n.value = nextSmaller.value;
+				n.key = nextSmaller.key;
+				y = nextSmaller;
+			}
+			if (notAnull(y.left) && notAnull(y.right)) {
+				if (y.isRED()) {
+					this.swapNodes(n, y);
+					return v;
+				}
 
+				this.deleteCase1(y);
+				this.swapNodes(y, new Node(null, null));
+				return v;
+			} else if (!notAnull(y.left) && notAnull(y.right)) {
+				if (y.isRED()) {
+					this.swapNodes(y, y.right);
+					return v;
+				}
+				if (y.right.isRED()) {
+					this.colourBlack(y.right);
+					this.swapNodes(y, y.right);
+					return v;
+
+				}
+			} else if (notAnull(y.left) && notAnull(y.right)) {
+				if (y.isRED()) {
+					this.swapNodes(y, y.left);
+					return v;
+				}
+				if (y.left.isRED()) {
+					this.colourBlack(y.left);
+					this.swapNodes(y, y.left);
+					return v;
+
+				}
+			}
+		}
 		return v;
 	}
+
+	public void deleteCase1(Node n) {
+		if (n.parent != null)
+			deleteCase2(n);
+	}
+
+	public void deleteCase2(Node n) {
+		Node sibling = n.sibling();
+		if (sibling.isRED()) {
+			this.colourRed(n.parent);
+			this.colourBlack(sibling);
+			if (n.isLeftChild())
+				this.rotateLeft(n.parent);
+
+			else
+				this.rotateRight(n.parent);
+		}
+		deleteCase3(n);
+	}
+
+	public void deleteCase3(Node n) {
+		Node sibling = n.sibling();
+		if ((n.parent.isBLACK()) && sibling.isBLACK() && sibling.left.isBLACK() && sibling.right.isBLACK()) {
+			this.colourRed(sibling);
+			deleteCase1(n.parent);
+		} else {
+			deleteCase4(n);
+		}
+	}
+
+	public void deleteCase4(Node n) {
+		Node sibling = n.sibling();
+		if (n.parent.isRED() && sibling.isBLACK() && sibling.left.isBLACK() && sibling.right.isBLACK()) {
+			this.colourRed(sibling);
+			this.colourBlack(n.parent);
+		} else {
+			deleteCase5(n);
+		}
+	}
+	
+	   public void deleteCase5(Node n) {
+	    	Node sibling = n.sibling();
+	    	if (sibling.isBLACK()) {
+	    		if (n.isLeftChild() &&
+	    				sibling.right.isBLACK() &&
+	    				sibling.left.isRED()) {
+	    			this.colourRed(sibling);
+	    			this.colourBlack(sibling.left);
+	    			this.rotateRight(sibling);
+	    		} else if((n.isRightChild()) &&
+	    				sibling.left.isBLACK() &&
+	    				sibling.right.isRED()) {
+	    			this.colourRed(sibling);
+	    			this.colourBlack(sibling.right);
+	    			this.rotateLeft(sibling);
+	    		}
+	    	}
+	    	deleteCase6(n);
+	}
+	
+	   public void deleteCase6(Node n) {
+	    	Node sibling = n.sibling();
+	    	
+	    	sibling.colour = n.parent.colour;
+	    	this.colourBlack(n.parent);
+	    	
+	    	if(n.isLeftChild()) {
+	    		this.colourBlack(sibling.right);
+	    		this.rotateLeft(n.parent);    		
+	    	} else {
+	    		this.colourBlack(sibling.left);
+	    		this.rotateRight(n.parent);
+	    	}
+	}
+	
 
 	public void deleteAsBST(Node n) {
 
@@ -229,7 +342,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 //			n = null;
 //			return;
 //		}
-		
+
 		if (!notAnull(n.left))
 			this.transplant(n, n.right);
 		else if (!notAnull(n.right))
@@ -245,11 +358,10 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 			y.left = n.left;
 			y.left.parent = y;
 		}
-			
-			
+
 	}
-	
-	//http://crypto.cs.mcgill.ca/~crepeau/COMP251/03graphsC.pdf
+
+	// http://crypto.cs.mcgill.ca/~crepeau/COMP251/03graphsC.pdf
 	public void transplant(Node u, Node v) {
 		if (u.parent == null) {
 			this.root = v;
@@ -271,7 +383,6 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		return !notAnull(n.left) && !notAnull(n.right);
 	}
 
-
 	public Node nextLarger(Node n) {
 		// next larger node is the leftmost node in right child's subtree
 		Node nextLarger = n.right;
@@ -284,6 +395,18 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		}
 		return nextLarger.parent;
 
+	}
+	
+	public Node nextSmaller(Node n) {
+		Node nextSmaller = n.left;
+		
+		if (n.left == null || n.left.isNil()) {
+			return n;
+		}
+		while (!nextSmaller.isNil()) {
+			nextSmaller = nextSmaller.right;
+		}
+		return nextSmaller.parent;
 	}
 
 	public void swapNodes(Node x, Node y) {
