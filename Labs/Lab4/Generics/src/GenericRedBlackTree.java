@@ -8,14 +8,13 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 
 	private int size = 0;
 
-	private Node root;
-	private Node NIL;
-	
-	GenericRedBlackTree(){
-		this.NIL = new Node(null, null);
-		this.NIL.left = NIL;
-		this.NIL.right = NIL;
-		this.root = NIL;
+	private Node NIL = new Node(null, null);
+	private Node root = NIL;
+
+	GenericRedBlackTree() {
+		this.root.left = NIL;
+		this.root.right = NIL;
+		this.root.parent = NIL;
 	}
 
 	public V find(K key) {
@@ -69,6 +68,10 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		return y;
 	}
 
+	private boolean isNil(Node node) {
+		return node == NIL;
+	}
+
 	public void transplant(Node u, Node v) {
 		if (u.parent == NIL)
 			this.root = v;
@@ -80,40 +83,50 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 			v.parent = u.parent;
 	}
 
-	public void leftRotate(Node x) {
-		if (x == null || x.right == null || x.right == NIL || x == NIL)
-			return;
-		Node y = x.right;
+	private void leftRotate(Node x) {
+
+		Node y;
+		y = x.right;
 		x.right = y.left;
-		if (y.left != NIL)
+
+		if (!isNil(y.left))
 			y.left.parent = x;
 		y.parent = x.parent;
-		if (x.parent == NIL)
-			this.root = y;
-		else if (x.isLeftChild())
+
+		if (isNil(x.parent))
+			root = y;
+
+		else if (x.parent.left == x)
 			x.parent.left = y;
+
 		else
 			x.parent.right = y;
+
 		y.left = x;
 		x.parent = y;
 	}
 
-	public void rightRotate(Node x) {
-		if (x == null || x.left == null || x.left == NIL || x == NIL)
-			return;
-		Node y = x.left;
-		x.left = y.right;
-		if (y.right != NIL)
-			y.right.parent = x;
-		y.parent = x.parent;
-		if (x.parent == NIL)
-			this.root = y;
-		else if (x.isRightChild())
-			x.parent.right = y;
+	private void rightRotate(Node y) {
+
+		Node x = y.left;
+		y.left = x.right;
+
+		if (!isNil(x.right))
+			x.right.parent = y;
+		x.parent = y.parent;
+
+		if (isNil(y.parent))
+			root = x;
+
+		else if (y.parent.right == y)
+			y.parent.right = x;
+
 		else
-			x.parent.left = y;
-		y.right = x;
-		x.parent = y;
+			y.parent.left = x;
+		x.right = y;
+
+		y.parent = x;
+
 	}
 
 	@SafeVarargs
@@ -132,163 +145,250 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 
 	public void insert(K key, V value) {
 
-		Node x = this.root;
-		Node y = NIL;
-		Node z = new Node(key, value);
+		insert(new Node(key, value));
+	}
 
-		while (x != NIL) {
+	public void insert(Node z) {
+		Node y = NIL;
+		Node x = root;
+
+		while (!isNil(x)) {
 			y = x;
-			if (z.key.compareTo(x.key) < 0)
+
+			if (z.key.compareTo(x.key) < 0) {
+
 				x = x.left;
-			else
+			}
+
+			else {
+
 				x = x.right;
+			}
 		}
+
 		z.parent = y;
-		if (y == NIL)
-			this.root = z;
+
+		if (isNil(y))
+			root = z;
 		else if (z.key.compareTo(y.key) < 0)
 			y.left = z;
 		else
 			y.right = z;
+
 		z.left = NIL;
 		z.right = NIL;
-		z.colourRed();
-		this.insertFixup(z);
-		size++;
+		z.colour = Node.RED;
+
+		insertFixup(z);
 	}
 
-	public void insertFixup(Node z) {
-		while (z.parent.isRED()) {
-			if (z.parent.isLeftChild()) {
-				Node y = z.parent.parent.right;
-				if (y.isRED()) {
-					z.parent.colourBlack();
-					y.colourBlack();
-					z.parent.parent.colourRed();
+	private void insertFixup(Node z) {
+
+		Node y = NIL;
+		// While there is a violation of the RedBlackTree properties..
+		while (z.parent.colour == Node.RED) {
+
+			// If z's parent is the the left child of it's parent.
+			if (z.parent == z.parent.parent.left) {
+
+				// Initialize y to z 's cousin
+				y = z.parent.parent.right;
+
+				// Case 1: if y is red...recolor
+				if (y.colour == Node.RED) {
+					z.parent.colour = Node.BLACK;
+					y.colour = Node.BLACK;
+					z.parent.parent.colour = Node.RED;
 					z = z.parent.parent;
-				} else if (z.isRightChild()) {
-					z = z.parent;
-					this.leftRotate(z);
 				}
-				z.parent.colourBlack();
-				colourRed(z.parent.parent);
-//				z.parent.parent.colourRed();
-				this.rightRotate(z.parent.parent);
-			} else {
-				Node y = z.parent.parent.left;
-				if (y.isRED()) {
-					z.parent.colourBlack();
-					y.colourBlack();
-					z.parent.parent.colourRed();
-					z = z.parent.parent;
-				} else if (z.parent.isLeftChild()) {
+				// Case 2: if y is black & z is a right child
+				else if (z == z.parent.right) {
+
+					// leftRotaet around z's parent
 					z = z.parent;
-					this.rightRotate(z);
+					leftRotate(z);
 				}
-				z.parent.colourBlack();
-//					z.parent.parent.colourRed();
-				colourRed(z.parent.parent);
-				this.leftRotate(z.parent.parent);
+
+				// Case 3: else y is black & z is a left child
+				else {
+					// recolor and rotate round z's grandpa
+					z.parent.colour = Node.BLACK;
+					z.parent.parent.colour = Node.RED;
+					rightRotate(z.parent.parent);
+				}
 			}
 
+			// If z's parent is the right child of it's parent.
+			else {
+
+				// Initialize y to z's cousin
+				y = z.parent.parent.left;
+
+				// Case 1: if y is red...recolor
+				if (y.colour == Node.RED) {
+					z.parent.colour = Node.BLACK;
+					y.colour = Node.BLACK;
+					z.parent.parent.colour = Node.RED;
+					z = z.parent.parent;
+				}
+
+				// Case 2: if y is black and z is a left child
+				else if (z == z.parent.left) {
+					// rightRotate around z's parent
+					z = z.parent;
+					rightRotate(z);
+				}
+				// Case 3: if y is black and z is a right child
+				else {
+					// recolor and rotate around z's grandpa
+					z.parent.colour = Node.BLACK;
+					z.parent.parent.colour = Node.RED;
+					leftRotate(z.parent.parent);
+				}
+			}
 		}
-		this.root.colourBlack();
+		// Color root black at all times
+		root.colour = Node.BLACK;
+
 	}
 
 	public V remove(K key) {
-		Node n = this.findNode(key);
-		if (n == null)
-			return null;
-		V v = n.value;
-		this.rbDelete(n);;
-		return v;
+		return remove(this.findNode(key));
 	}
-	
-	public void rbDelete(Node z) {
-		Node x;
-		Node y = z;
-		boolean yOriginalColour = y.colour;
-		
-		if (z.left == NIL) {
-			x = z.right;
-			this.transplant(z, z.right);
-		} else if (z.right == NIL) {
-			x = z.left;
-			this.transplant(z, z.left);
-		} else {
-			y = this.treeMin(z.right);
-			yOriginalColour = y.colour;
+
+	public V remove(Node v) {
+
+		Node z = this.findNode(v.key);
+		V val = z.value;
+
+		Node x = NIL;
+		Node y = NIL;
+
+		// if either one of z's children is nil, then we must remove z
+		if (isNil(z.left) || isNil(z.right))
+			y = z;
+
+		// else we must remove the successor of z
+		else
+			y = treeSuccessor(z);
+
+		// Let x be the left or right child of y (y can only have one child)
+		if (!isNil(y.left))
+			x = y.left;
+		else
 			x = y.right;
-			if (y.parent == z)
-				x.parent = y;
-			else {
-				this.transplant(y, y.right);
-				y.right = z.right;
-				y.right.parent = y;
-			}
-			this.transplant(z, y);
-			y.left = z.left;
-			y.left.parent = y;
-			y.colour = z.colour;
+
+		// link x's parent to y's parent
+		x.parent = y.parent;
+
+		// If y's parent is nil, then x is the root
+		if (isNil(y.parent))
+			root = x;
+
+		// else if y is a left child, set x to be y's left sibling
+		else if (!isNil(y.parent.left) && y.parent.left == y)
+			y.parent.left = x;
+
+		// else if y is a right child, set x to be y's right sibling
+		else if (!isNil(y.parent.right) && y.parent.right == y)
+			y.parent.right = x;
+
+		// if y != z, trasfer y's satellite data into z.
+		if (y != z) {
+			z.key = y.key;
 		}
-		if (yOriginalColour == Node.BLACK)
-				this.deleteFixup(x);
+
+		if (y.colour == Node.BLACK)
+			removeFixup(x);
 		size--;
+		return val;
 	}
-	
-	
-	public void deleteFixup(Node x) {
-		while (x != this.root && x.isBLACK()) {
-			if (x.isLeftChild()) {
-				Node w = x.parent.right;
-				if (w.isRED()) {
-					w.colourBlack();
-					x.parent.colourRed();
-					this.leftRotate(x.parent);
+
+	private void removeFixup(Node x) {
+
+		Node w;
+
+		while (x != root && x.colour == Node.BLACK) {
+
+			// if x is it's parent's left child
+			if (x == x.parent.left) {
+
+				// set w = x's sibling
+				w = x.parent.right;
+
+				// Case 1, w's color is red.
+				if (w.colour == Node.RED) {
+					w.colour = Node.BLACK;
+					x.parent.colour = Node.RED;
+					leftRotate(x.parent);
 					w = x.parent.right;
 				}
 
-				if (w.left.isBLACK() && w.right.isBLACK()) {
-					w.colourRed();
+				// Case 2, both of w's children are black
+				if (w.left.colour == Node.BLACK && w.right.colour == Node.BLACK) {
+					w.colour = Node.RED;
 					x = x.parent;
-				} else if (w.right.isBLACK()){
-					w.left.colourBlack();
-					w.colourRed();
-					this.rightRotate(w);
-					w = x.parent.right;
 				}
-				w.colour = x.parent.colour;
-				x.parent.colourBlack();
-				w.right.colourBlack();
-				this.leftRotate(x.parent);
-				x = this.root;
-			} else {
-				Node w = x.parent.left;
-				if (w.isRED()) {
-					w.colourBlack();
-					x.parent.colourRed();
-					this.rightRotate(x.parent);
+				// Case 3 / Case 4
+				else {
+					// Case 3, w's right child is black
+					if (w.right.colour == Node.BLACK) {
+						w.left.colour = Node.BLACK;
+						w.colour = Node.RED;
+						rightRotate(w);
+						w = x.parent.right;
+					}
+					// Case 4, w = black, w.right = red
+					w.colour = x.parent.colour;
+					x.parent.colour = Node.BLACK;
+					w.right.colour = Node.BLACK;
+					leftRotate(x.parent);
+					x = root;
+				}
+			}
+			// if x is it's parent's right child
+			else {
+
+				// set w to x's sibling
+				w = x.parent.left;
+
+				// Case 1, w's color is red
+				if (w.colour == Node.RED) {
+					w.colour = Node.BLACK;
+					x.parent.colour = Node.RED;
+					rightRotate(x.parent);
 					w = x.parent.left;
 				}
-				if (w.right.isBLACK() && w.left.isBLACK()) {
-					w.colourRed();
+
+				// Case 2, both of w's children are black
+				if (w.right.colour == Node.BLACK && w.left.colour == Node.BLACK) {
+					w.colour = Node.RED;
 					x = x.parent;
-				} else if (w.left.isBLACK()){
-					w.right.colourBlack();
-					w.colourRed();
-					this.rightRotate(w);
-					w = x.parent.left;
 				}
-				w.colour = x.parent.colour;
-				x.parent.colourBlack();
-				w.left.colourBlack();
-				this.leftRotate(x.parent);
-				x = this.root;
+
+				// Case 3 / Case 4
+				else {
+					// Case 3, w's left child is black
+					if (w.left.colour == Node.BLACK) {
+						w.right.colour = Node.BLACK;
+						w.colour = Node.RED;
+						leftRotate(w);
+						w = x.parent.left;
+					}
+
+					// Case 4, w = black, and w.left = red
+					w.colour = x.parent.colour;
+					x.parent.colour = Node.BLACK;
+					w.left.colour = Node.BLACK;
+					rightRotate(x.parent);
+					x = root;
+				}
 			}
 		}
-		x.colourBlack();
+
+		x.colour = Node.BLACK;
 	}
-	
+
 	public int size() {
 		return size;
 	}
@@ -320,75 +420,76 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 
 	@Override
 	public String toString() {
-		return this.inOrder(root);
+//		return this.inOrder(root);
+		return "";
 	}
 
 	public static void main(String[] args) {
 		GenericRedBlackTree<Integer, String> rbt = new GenericRedBlackTree<Integer, String>();
-//		int[] keys = new int[10];
+		int[] keys = new int[10];
+		for (int i = 0; i < 10; i++) {
+			keys[i] = (int) (Math.random() * 200);
+			System.out.println(String.format("%2d Insert: %-3d ", i + 1, keys[i]));
+			rbt.insert(keys[i], "\"" + keys[i] + "\"");
+		} // for (int i = 0; i < 10; i++)
+
+		assert rbt.root.colour == GenericRedBlackTree.Node.BLACK;
+		System.out.println(rbt.root); // This helps to figure out the tree structure
+		System.out.println(rbt);
+
 //		for (int i = 0; i < 10; i++) {
-//			keys[i] = (int) (Math.random() * 200);
-//			System.out.println(String.format("%2d Insert: %-3d ", i + 1, keys[i]));
-//			rbt.insert(keys[i], "\"" + keys[i] + "\"");
+//			System.out.println(String.format("%2d Delete: %3d(%s)", i + 1, keys[i], rbt.remove(keys[i])));
+//			if ((i + 1) % 5 == 0) {
+//				System.out.println(rbt);
+//			} // if ((i + 1) % 5 == 0)
 //		} // for (int i = 0; i < 10; i++)
-//
-//		assert rbt.root.colour == GenericRedBlackTree.Node.BLACK;
-//		System.out.println(rbt.root); // This helps to figure out the tree structure
-//		System.out.println(rbt);
-//
-////		for (int i = 0; i < 10; i++) {
-////			System.out.println(String.format("%2d Delete: %3d(%s)", i + 1, keys[i], rbt.remove(keys[i])));
-////			if ((i + 1) % 5 == 0) {
-////				System.out.println(rbt);
-////			} // if ((i + 1) % 5 == 0)
-////		} // for (int i = 0; i < 10; i++)
-//		
-//		for (int i = 0; i < 10; i++) {
-//			System.out.println(String.format("%2d Delete: %3d(%s)", i + 1, keys[i], rbt.remove(keys[i])));;
-//			rbt.printBreadthFirstSearch();
-//		}
 
-		
-		rbt.insert(34, "34");
-		rbt.insert(64, "64");
-		rbt.insert(129, "129");
-		rbt.insert(187, "187");
-		rbt.insert(92, "92");
-		rbt.insert(32, "32");
-		rbt.insert(162, "162");
-		rbt.insert(188, "188");
-		rbt.insert(77, "77");
-		rbt.insert(37, "37");
-		rbt.printBreadthFirstSearch();
+		for (int i = 0; i < 10; i++) {
+			System.out.println(String.format("%2d Delete: %3d(%s)", i + 1, keys[i], rbt.remove(keys[i])));
+			;
+			rbt.printBreadthFirstSearch();
+		}
 
-		rbt.remove(34);
-		System.out.println("removing 34");
-		rbt.printBreadthFirstSearch();
-		rbt.remove(64);
-		System.out.println("removing 64");
-		rbt.printBreadthFirstSearch();
-		rbt.remove(129);
-		System.out.println("removing 129");
-		rbt.printBreadthFirstSearch();
-		rbt.remove(187);
-		System.out.println("removing 187");
-		rbt.printBreadthFirstSearch();
-		rbt.remove(92);
-		System.out.println("removing 92");
-		rbt.printBreadthFirstSearch();
-		rbt.remove(37);
-		System.out.println("removing 37");
-		rbt.printBreadthFirstSearch();
-		rbt.remove(77);
-		rbt.remove(188);
-		System.out.println("removing 188");
-		rbt.printBreadthFirstSearch();
-		rbt.remove(162);
-		System.out.println("removing 162");
-		rbt.printBreadthFirstSearch();
-		rbt.remove(32);
-		System.out.println("removing 32");
-		rbt.printBreadthFirstSearch();
+//		rbt.insert(34, "34");
+//		rbt.insert(64, "64");
+//		rbt.insert(129, "129");
+//		rbt.insert(187, "187");
+//		rbt.insert(92, "92");
+//		rbt.insert(32, "32");
+//		rbt.insert(162, "162");
+//		rbt.insert(188, "188");
+//		rbt.insert(77, "77");
+//		rbt.insert(37, "37");
+//		rbt.printBreadthFirstSearch();
+//
+//		rbt.remove(34);
+//		System.out.println("removing 34");
+//		rbt.printBreadthFirstSearch();
+//		rbt.remove(64);
+//		System.out.println("removing 64");
+//		rbt.printBreadthFirstSearch();
+//		rbt.remove(129);
+//		System.out.println("removing 129");
+//		rbt.printBreadthFirstSearch();
+//		rbt.remove(187);
+//		System.out.println("removing 187");
+//		rbt.printBreadthFirstSearch();
+//		rbt.remove(92);
+//		System.out.println("removing 92");
+//		rbt.printBreadthFirstSearch();
+//		rbt.remove(37);
+//		System.out.println("removing 37");
+//		rbt.printBreadthFirstSearch();
+//		rbt.remove(77);
+//		rbt.remove(188);
+//		System.out.println("removing 188");
+//		rbt.printBreadthFirstSearch();
+//		rbt.remove(162);
+//		System.out.println("removing 162");
+//		rbt.printBreadthFirstSearch();
+//		rbt.remove(32);
+//		System.out.println("removing 32");
+//		rbt.printBreadthFirstSearch();
 	}
 
 	private class Node {
