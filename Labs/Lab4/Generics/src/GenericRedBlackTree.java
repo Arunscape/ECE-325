@@ -3,6 +3,9 @@
  * The {@code GenericRedBlackTree} class <br />
  * Reference: <a href="https://en.wikipedia.org/wiki/Red%E2%80%93black_tree">
  * https://en.wikipedia.org/wiki/Red%E2%80%93black_tree </a>
+ * https://mcdtu.files.wordpress.com/2017/03/introduction-to-algorithms-3rd-edition-sep-2010.pdf
+ * page 316
+ * https://github.com/Arsenalist/Red-Black-Tree-Java-Implementation/blob/master/src/RedBlackTree.java
  */
 public class GenericRedBlackTree<K extends Comparable<K>, V> {
 
@@ -18,20 +21,24 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	}
 
 	public V find(K key) {
-		return treeSearch(this.root, key).value;
+		return treeSearch(key).value;
 	}
 
-	public Node findNode(K key) {
-		return treeSearch(this.root, key);
-	}
+	public Node treeSearch(K key) {
+		Node n = this.root;
+		while (!isNil(n)) {
+			if (key.compareTo(n.key) < -0) {
+				n = n.left;
+			} else if (key.compareTo(n.key) > 0) {
+				n = n.right;
+			} else if (n.key.equals(key)) {
+				return n;
+			} else {
+				System.out.println("REEEEEE");
+			}
+		}
+		return null;
 
-	public Node treeSearch(Node x, K k) {
-		if (x == NIL || k.equals(x.key))
-			return x;
-		if (k.compareTo(x.key) < 0)
-			return treeSearch(x.left, k);
-		else
-			return treeSearch(x.right, k);
 	}
 
 	public Node treeMin(Node x) {
@@ -155,15 +162,10 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		while (!isNil(x)) {
 			y = x;
 
-			if (z.key.compareTo(x.key) < 0) {
-
+			if (z.key.compareTo(x.key) < 0)
 				x = x.left;
-			}
-
-			else {
-
+			else
 				x = x.right;
-			}
 		}
 
 		z.parent = y;
@@ -185,16 +187,14 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	private void insertFixup(Node z) {
 
 		Node y = NIL;
-		// While there is a violation of the RedBlackTree properties..
+
 		while (z.parent.colour == Node.RED) {
 
-			// If z's parent is the the left child of it's parent.
 			if (z.parent == z.parent.parent.left) {
 
-				// Initialize y to z 's cousin
 				y = z.parent.parent.right;
 
-				// Case 1: if y is red...recolor
+				// Case 1: if y is red...recolour
 				if (y.colour == Node.RED) {
 					z.parent.colour = Node.BLACK;
 					y.colour = Node.BLACK;
@@ -211,7 +211,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 
 				// Case 3: else y is black & z is a left child
 				else {
-					// recolor and rotate round z's grandpa
+					// recolour and rotate round z's grandpa
 					z.parent.colour = Node.BLACK;
 					z.parent.parent.colour = Node.RED;
 					rightRotate(z.parent.parent);
@@ -224,7 +224,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 				// Initialize y to z's cousin
 				y = z.parent.parent.left;
 
-				// Case 1: if y is red...recolor
+				// Case 1: if y is red...recolour
 				if (y.colour == Node.RED) {
 					z.parent.colour = Node.BLACK;
 					y.colour = Node.BLACK;
@@ -240,7 +240,6 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 				}
 				// Case 3: if y is black and z is a right child
 				else {
-					// recolor and rotate around z's grandpa
 					z.parent.colour = Node.BLACK;
 					z.parent.parent.colour = Node.RED;
 					leftRotate(z.parent.parent);
@@ -253,49 +252,44 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	}
 
 	public V remove(K key) {
-		return remove(this.findNode(key));
+		return remove(this.treeSearch(key));
 	}
 
 	public V remove(Node v) {
 
-		Node z = this.findNode(v.key);
+		Node z = this.treeSearch(v.key);
+		if (z == null)
+			return null;
 		V val = z.value;
 
 		Node x = NIL;
 		Node y = NIL;
 
-		// if either one of z's children is nil, then we must remove z
 		if (isNil(z.left) || isNil(z.right))
 			y = z;
 
-		// else we must remove the successor of z
 		else
 			y = treeSuccessor(z);
 
-		// Let x be the left or right child of y (y can only have one child)
 		if (!isNil(y.left))
 			x = y.left;
 		else
 			x = y.right;
 
-		// link x's parent to y's parent
 		x.parent = y.parent;
 
-		// If y's parent is nil, then x is the root
 		if (isNil(y.parent))
 			root = x;
 
-		// else if y is a left child, set x to be y's left sibling
 		else if (!isNil(y.parent.left) && y.parent.left == y)
 			y.parent.left = x;
 
-		// else if y is a right child, set x to be y's right sibling
 		else if (!isNil(y.parent.right) && y.parent.right == y)
 			y.parent.right = x;
 
-		// if y != z, trasfer y's satellite data into z.
 		if (y != z) {
 			z.key = y.key;
+			z.value = y.value;
 		}
 
 		if (y.colour == Node.BLACK)
@@ -450,46 +444,6 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 			rbt.printBreadthFirstSearch();
 		}
 
-//		rbt.insert(34, "34");
-//		rbt.insert(64, "64");
-//		rbt.insert(129, "129");
-//		rbt.insert(187, "187");
-//		rbt.insert(92, "92");
-//		rbt.insert(32, "32");
-//		rbt.insert(162, "162");
-//		rbt.insert(188, "188");
-//		rbt.insert(77, "77");
-//		rbt.insert(37, "37");
-//		rbt.printBreadthFirstSearch();
-//
-//		rbt.remove(34);
-//		System.out.println("removing 34");
-//		rbt.printBreadthFirstSearch();
-//		rbt.remove(64);
-//		System.out.println("removing 64");
-//		rbt.printBreadthFirstSearch();
-//		rbt.remove(129);
-//		System.out.println("removing 129");
-//		rbt.printBreadthFirstSearch();
-//		rbt.remove(187);
-//		System.out.println("removing 187");
-//		rbt.printBreadthFirstSearch();
-//		rbt.remove(92);
-//		System.out.println("removing 92");
-//		rbt.printBreadthFirstSearch();
-//		rbt.remove(37);
-//		System.out.println("removing 37");
-//		rbt.printBreadthFirstSearch();
-//		rbt.remove(77);
-//		rbt.remove(188);
-//		System.out.println("removing 188");
-//		rbt.printBreadthFirstSearch();
-//		rbt.remove(162);
-//		System.out.println("removing 162");
-//		rbt.printBreadthFirstSearch();
-//		rbt.remove(32);
-//		System.out.println("removing 32");
-//		rbt.printBreadthFirstSearch();
 	}
 
 	private class Node {
