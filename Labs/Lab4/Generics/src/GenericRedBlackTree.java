@@ -8,8 +8,15 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 
 	private int size = 0;
 
-	private Node NIL = new Node(null, null);
-	private Node root = NIL;
+	private Node root;
+	private Node NIL;
+	
+	GenericRedBlackTree(){
+		this.NIL = new Node(null, null);
+		this.NIL.left = NIL;
+		this.NIL.right = NIL;
+		this.root = NIL;
+	}
 
 	public V find(K key) {
 		return treeSearch(this.root, key).value;
@@ -253,7 +260,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 				w.colour = x.parent.colour;
 				x.parent.colourBlack();
 				w.right.colourBlack();
-				this.rightRotate(x.parent);
+				this.leftRotate(x.parent);
 				x = this.root;
 			} else {
 				Node w = x.parent.left;
@@ -269,7 +276,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 				} else if (w.left.isBLACK()){
 					w.right.colourBlack();
 					w.colourRed();
-					this.leftRotate(w);
+					this.rightRotate(w);
 					w = x.parent.left;
 				}
 				w.colour = x.parent.colour;
