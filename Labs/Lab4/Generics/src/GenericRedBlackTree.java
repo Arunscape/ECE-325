@@ -407,15 +407,14 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	}
 
 	public String inOrder(Node root) {
-		return root == null ? ""
-				: (root.left == null ? "" : inOrder(root.left)) + root + " "
-						+ (root.right == null ? "" : inOrder(root.right));
+		return root == NIL ? ""
+				: (root.left == NIL ? "" : inOrder(root.left)) + root + " "
+						+ (root.right == NIL ? "" : inOrder(root.right));
 	}
 
 	@Override
 	public String toString() {
-//		return this.inOrder(root);
-		return "";
+		return this.inOrder(root);
 	}
 
 	public static void main(String[] args) {
@@ -430,19 +429,23 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		assert rbt.root.colour == GenericRedBlackTree.Node.BLACK;
 		System.out.println(rbt.root); // This helps to figure out the tree structure
 		System.out.println(rbt);
-
-//		for (int i = 0; i < 10; i++) {
-//			System.out.println(String.format("%2d Delete: %3d(%s)", i + 1, keys[i], rbt.remove(keys[i])));
-//			if ((i + 1) % 5 == 0) {
-//				System.out.println(rbt);
-//			} // if ((i + 1) % 5 == 0)
-//		} // for (int i = 0; i < 10; i++)
+		System.out.println();
+		System.out.println();
+		System.out.println();
 
 		for (int i = 0; i < 10; i++) {
 			System.out.println(String.format("%2d Delete: %3d(%s)", i + 1, keys[i], rbt.remove(keys[i])));
-			;
-			rbt.printBreadthFirstSearch();
-		}
+			if ((i + 1) % 5 == 0) {
+				System.out.println(rbt);
+			} // if ((i + 1) % 5 == 0)
+		} // for (int i = 0; i < 10; i++)
+		
+//		for (int i = 0; i < 10; i++) {
+//			System.out.println(String.format("%2d Delete: %3d(%s)", i + 1, keys[i], rbt.remove(keys[i])));
+//			;
+//			rbt.printBreadthFirstSearch();
+////			System.out.println(rbt);
+//		}
 
 	}
 
