@@ -29,13 +29,13 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	}
 
 	public Node treeMin(Node x) {
-		while (x.left != NIL && x.left != null)
+		while (x.left != NIL)
 			x = x.left;
 		return x;
 	}
 
 	public Node treeMax(Node x) {
-		while (x.right != NIL && x.left != null)
+		while (x.right != NIL)
 			x = x.right;
 		return x;
 	}
@@ -78,10 +78,10 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 			return;
 		Node y = x.right;
 		x.right = y.left;
-		if (y.left != NIL && y.left != null)
+		if (y.left != NIL)
 			y.left.parent = x;
 		y.parent = x.parent;
-		if (x.parent == NIL)
+		if (y.parent == NIL)
 			this.root = y;
 		else if (x.isLeftChild())
 			x.parent.left = y;
@@ -96,10 +96,10 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 			return;
 		Node y = x.left;
 		x.left = y.right;
-		if (y.right != NIL && y.right != null)
+		if (y.right != NIL)
 			y.right.parent = x;
 		y.parent = x.parent;
-		if (x.parent == NIL)
+		if (y.parent == NIL)
 			this.root = y;
 		else if (x.isRightChild())
 			x.parent.right = y;
@@ -193,16 +193,15 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		if (n == null)
 			return null;
 		V v = n.value;
-		this.rbDelete(n);
-		;
+		this.rbDelete(n);;
 		return v;
 	}
-
+	
 	public void rbDelete(Node z) {
 		Node x;
 		Node y = z;
 		boolean yOriginalColour = y.colour;
-
+		
 		if (z.left == NIL) {
 			x = z.right;
 			this.transplant(z, z.right);
@@ -226,10 +225,11 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 			y.colour = z.colour;
 		}
 		if (yOriginalColour == Node.BLACK)
-			this.deleteFixup(x);
+				this.deleteFixup(x);
 		size--;
 	}
-
+	
+	
 	public void deleteFixup(Node x) {
 		while (x != this.root && x.isBLACK()) {
 			if (x.isLeftChild()) {
@@ -244,7 +244,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 				if (w.left.isBLACK() && w.right.isBLACK()) {
 					w.colourRed();
 					x = x.parent;
-				} else if (w.right.isBLACK()) {
+				} else if (w.right.isBLACK()){
 					w.left.colourBlack();
 					w.colourRed();
 					this.rightRotate(w);
@@ -253,7 +253,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 				w.colour = x.parent.colour;
 				x.parent.colourBlack();
 				w.right.colourBlack();
-				this.leftRotate(x.parent);
+				this.rightRotate(x.parent);
 				x = this.root;
 			} else {
 				Node w = x.parent.left;
@@ -266,23 +266,22 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 				if (w.right.isBLACK() && w.left.isBLACK()) {
 					w.colourRed();
 					x = x.parent;
-				} else if (w.left.isBLACK()) {
+				} else if (w.left.isBLACK()){
 					w.right.colourBlack();
 					w.colourRed();
-					this.rightRotate(w);
+					this.leftRotate(w);
 					w = x.parent.left;
 				}
 				w.colour = x.parent.colour;
 				x.parent.colourBlack();
-				colourBlack(w.left);
-//				w.left.colourBlack();
+				w.left.colourBlack();
 				this.leftRotate(x.parent);
 				x = this.root;
 			}
 		}
 		x.colourBlack();
 	}
-
+	
 	public int size() {
 		return size;
 	}
@@ -336,13 +335,13 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 //				System.out.println(rbt);
 //			} // if ((i + 1) % 5 == 0)
 //		} // for (int i = 0; i < 10; i++)
-
+		
 		for (int i = 0; i < 10; i++) {
-			System.out.println(String.format("%2d Delete: %3d(%s)", i + 1, keys[i], rbt.remove(keys[i])));
-			;
+			System.out.println(String.format("%2d Delete: %3d(%s)", i + 1, keys[i], rbt.remove(keys[i])));;
 			rbt.printBreadthFirstSearch();
 		}
 
+		
 //		rbt.insert(34, "34");
 //		rbt.insert(64, "64");
 //		rbt.insert(129, "129");
@@ -406,14 +405,10 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		}
 
 		public boolean isLeftChild() {
-			if (this.parent == null)
-				return false;
 			return this == this.parent.left;
 		}
 
 		public boolean isRightChild() {
-			if (this.parent == null)
-				return false;
 			return this == this.parent.right;
 		}
 
