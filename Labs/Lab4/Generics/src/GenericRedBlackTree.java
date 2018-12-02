@@ -159,7 +159,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 					y.colourBlack();
 					z.parent.parent.colourRed();
 					z = z.parent.parent;
-				} else if (z.parent.isRightChild()) {
+				} else if (z.isRightChild()) {
 					z = z.parent;
 					this.leftRotate(z);
 				}
@@ -240,6 +240,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 					this.leftRotate(x.parent);
 					w = x.parent.right;
 				}
+
 				if (w.left.isBLACK() && w.right.isBLACK()) {
 					w.colourRed();
 					x = x.parent;
@@ -328,13 +329,19 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		System.out.println(rbt.root); // This helps to figure out the tree structure
 		System.out.println(rbt);
 
+//		for (int i = 0; i < 10; i++) {
+//			System.out.println(String.format("%2d Delete: %3d(%s)", i + 1, keys[i], rbt.remove(keys[i])));
+//			if ((i + 1) % 5 == 0) {
+//				System.out.println(rbt);
+//			} // if ((i + 1) % 5 == 0)
+//		} // for (int i = 0; i < 10; i++)
+		
 		for (int i = 0; i < 10; i++) {
-			System.out.println(String.format("%2d Delete: %3d(%s)", i + 1, keys[i], rbt.remove(keys[i])));
-			if ((i + 1) % 5 == 0) {
-				System.out.println(rbt);
-			} // if ((i + 1) % 5 == 0)
-		} // for (int i = 0; i < 10; i++)
+			System.out.println(String.format("%2d Delete: %3d(%s)", i + 1, keys[i], rbt.remove(keys[i])));;
+			rbt.printBreadthFirstSearch();
+		}
 
+		
 //		rbt.insert(34, "34");
 //		rbt.insert(64, "64");
 //		rbt.insert(129, "129");
