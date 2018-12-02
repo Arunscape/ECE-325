@@ -74,14 +74,14 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	}
 
 	public void leftRotate(Node x) {
-		if (x == null || x.right == null)
+		if (x == null || x.right == null || x.right == NIL || x == NIL)
 			return;
 		Node y = x.right;
 		x.right = y.left;
 		if (y.left != NIL)
 			y.left.parent = x;
 		y.parent = x.parent;
-		if (y.parent == NIL)
+		if (x.parent == NIL)
 			this.root = y;
 		else if (x.isLeftChild())
 			x.parent.left = y;
@@ -92,14 +92,14 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	}
 
 	public void rightRotate(Node x) {
-		if (x == null || x.right == null)
+		if (x == null || x.left == null || x.left == NIL || x == NIL)
 			return;
 		Node y = x.left;
 		x.left = y.right;
 		if (y.right != NIL)
 			y.right.parent = x;
 		y.parent = x.parent;
-		if (y.parent == NIL)
+		if (x.parent == NIL)
 			this.root = y;
 		else if (x.isRightChild())
 			x.parent.right = y;
