@@ -27,7 +27,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 	public Node treeSearch(K key) {
 		Node n = this.root;
 		while (!isNil(n)) {
-			if (key.compareTo(n.key) < -0) {
+			if (key.compareTo(n.key) < 0) {
 				n = n.left;
 			} else if (key.compareTo(n.key) > 0) {
 				n = n.right;
@@ -436,6 +436,7 @@ public class GenericRedBlackTree<K extends Comparable<K>, V> {
 		for (int i = 0; i < 10; i++) {
 			System.out.println(String.format("%2d Delete: %3d(%s)", i + 1, keys[i], rbt.remove(keys[i])));
 			if ((i + 1) % 5 == 0) {
+				System.out.println(rbt.root);
 				System.out.println(rbt);
 			} // if ((i + 1) % 5 == 0)
 		} // for (int i = 0; i < 10; i++)

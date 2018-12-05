@@ -161,6 +161,7 @@ public class SkipList<K extends Comparable<K>, V> {
 
 		V v = n.value;
 		n = null;
+		size--;
 		return v;
 	}
 
